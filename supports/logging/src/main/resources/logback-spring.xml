@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <!-- 역할별 appender 설정 포함 -->
+    <include resource="appender/console-appender.xml"/>
+    <include resource="appender/json-appender.xml"/>
+    <include resource="appender/file-appender.xml"/>
+
+    <!-- 로컬 개발 환경 프로파일 -->
+    <springProfile name="local">
+        <logger name="com.localtalk" level="DEBUG"/>
+        <logger name="org.springframework" level="INFO"/>
+        <root level="INFO">
+            <appender-ref ref="ASYNC_CONSOLE"/>
+        </root>
+    </springProfile>
+
+    <!-- 개발 환경 프로파일 -->
+    <springProfile name="dev">
+        <logger name="com.localtalk" level="DEBUG"/>
+        <logger name="org.springframework" level="INFO"/>
+        <logger name="org.hibernate" level="INFO"/>
+        <root level="INFO">
+            <appender-ref ref="ASYNC_CONSOLE"/>
+        </root>
+    </springProfile>
+
+    <!-- 테스트 환경 프로파일 -->
+    <springProfile name="test">
+        <logger name="com.localtalk" level="DEBUG"/>
+        <logger name="org.springframework" level="WARN"/>
+        <logger name="org.hibernate" level="WARN"/>
+        <logger name="org.testcontainers" level="INFO"/>
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+        </root>
+    </springProfile>
+
+    <!-- 운영 환경 프로파일 -->
+    <springProfile name="prod">
+        <logger name="com.localtalk" level="INFO"/>
+        <logger name="org.springframework" level="WARN"/>
+        <logger name="org.hibernate" level="ERROR"/>
+        <root level="WARN">
+            <appender-ref ref="ASYNC_CONSOLE"/>
+            <appender-ref ref="ERROR_FILE"/>
+        </root>
+    </springProfile>
+</configuration>

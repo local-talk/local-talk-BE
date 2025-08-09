@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<included>
+    <!-- 콘솔 출력 포맷 -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %highlight(%-5level) %magenta(%logger{20}) - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 고성능 콘솔 로깅을 위한 비동기 콘솔 출력 -->
+    <appender name="ASYNC_CONSOLE" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="CONSOLE"/>
+        <queueSize>512</queueSize>
+        <discardingThreshold>20</discardingThreshold>
+        <maxFlushTime>1000</maxFlushTime>
+        <includeCallerData>false</includeCallerData>
+    </appender>
+</included>

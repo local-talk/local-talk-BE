@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<included>
+    <!-- 운영 환경용 JSON 구조화 콘솔 출력 -->
+    <appender name="JSON_CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+            <includeContext>true</includeContext>
+            <includeMdc>true</includeMdc>
+            <customFields>{"service":"localtalk-api","environment":"production"}</customFields>
+            <fieldNames>
+                <timestamp>@timestamp</timestamp>
+                <message>message</message>
+                <level>level</level>
+                <thread>thread</thread>
+                <logger>logger</logger>
+            </fieldNames>
+        </encoder>
+    </appender>
+
+    <!-- 고성능 JSON 로깅을 위한 비동기 JSON 출력 -->
+    <appender name="ASYNC_JSON" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="JSON_CONSOLE"/>
+        <queueSize>512</queueSize>
+        <discardingThreshold>20</discardingThreshold>
+        <maxFlushTime>1000</maxFlushTime>
+        <includeCallerData>false</includeCallerData>
+    </appender>
+</included>
