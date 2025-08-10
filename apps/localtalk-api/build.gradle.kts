@@ -4,11 +4,10 @@ plugins {
 
 dependencies {
     implementation(project(":modules:jpa"))
+    implementation(project(":modules:web"))
     implementation(project(":supports:logging"))
 
-    implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
     developmentOnly("org.springframework.boot:spring-boot-devtools")
 
