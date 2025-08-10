@@ -3,7 +3,7 @@
     <!-- 콘솔 출력 포맷 -->
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%d{HH:mm:ss.SSS} [%thread] %highlight(%-5level) %magenta(%logger{20}) - %msg%n</pattern>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %highlight(%-5level) %magenta(%logger{20}) %cyan([TraceID: %X{traceId:-NONE}]) - %msg%n</pattern>
         </encoder>
     </appender>
 
