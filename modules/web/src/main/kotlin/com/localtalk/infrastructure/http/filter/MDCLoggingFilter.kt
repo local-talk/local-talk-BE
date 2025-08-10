@@ -15,16 +15,14 @@ import org.springframework.web.util.ContentCachingResponseWrapper
 
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
-class MDCLoggingFilter(
-    private val logFormatter: HttpLogFormatter
-) : OncePerRequestFilter() {
+class MDCLoggingFilter(private val logFormatter: HttpLogFormatter) : OncePerRequestFilter() {
 
     private val log = logger()
 
     override fun doFilterInternal(
         request: HttpServletRequest,
         response: HttpServletResponse,
-        filterChain: FilterChain
+        filterChain: FilterChain,
     ) {
         val startTime = System.currentTimeMillis()
 

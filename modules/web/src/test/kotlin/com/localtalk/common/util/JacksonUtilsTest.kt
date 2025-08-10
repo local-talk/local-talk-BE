@@ -1,8 +1,6 @@
 package com.localtalk.common.util
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import io.mockk.every
-import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -31,7 +29,7 @@ class JacksonUtilsTest {
                  "name" : "홍길동",
                  "age" : 30
                }
-                """.trimIndent()
+                """.trimIndent(),
             )
         }
 

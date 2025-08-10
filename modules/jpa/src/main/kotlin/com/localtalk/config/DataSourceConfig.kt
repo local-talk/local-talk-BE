@@ -19,6 +19,6 @@ class DataSourceConfig {
     @Bean
     @Primary
     fun mysqlMasterDataSource(
-        @Qualifier("mysqlHikariMasterConfig") hikariConfig: HikariConfig
+        @Qualifier("mysqlHikariMasterConfig") hikariConfig: HikariConfig,
     ): DataSource = HikariDataSource(hikariConfig)
 }

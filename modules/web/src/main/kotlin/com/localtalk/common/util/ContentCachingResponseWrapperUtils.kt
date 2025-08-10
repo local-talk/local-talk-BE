@@ -11,5 +11,7 @@ internal fun ContentCachingResponseWrapper.getTruncatedBody(maxLength: Int = 100
     val body = String(contentAsByteArray, Charsets.UTF_8)
     return if (body.length > maxLength) {
         "${body.take(maxLength)}... (${body.length} chars)"
-    } else body
+    } else {
+        body
+    }
 }

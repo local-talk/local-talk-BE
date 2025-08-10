@@ -18,7 +18,9 @@ class CachedBodyRequestWrapper(request: HttpServletRequest) : HttpServletRequest
         val body = String(cachedBody, Charsets.UTF_8)
         return if (body.length > maxLength) {
             "${body.take(maxLength)}... (${body.length} chars)"
-        } else body
+        } else {
+            body
+        }
     }
 
     fun hasBody(): Boolean = cachedBody.isNotEmpty()

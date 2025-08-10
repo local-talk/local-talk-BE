@@ -27,7 +27,7 @@ subprojects {
     apply(plugin = "org.jetbrains.kotlin.plugin.spring")
     apply(plugin = "org.springframework.boot")
     apply(plugin = "io.spring.dependency-management")
-    
+
     tasks.withType<JavaCompile> {
         options.release.set(21)
     }
@@ -37,7 +37,7 @@ subprojects {
             jvmTarget.set(JvmTarget.JVM_21)
             freeCompilerArgs.addAll(
                 "-Xjdk-release=21",
-                "-Xjsr305=strict"
+                "-Xjsr305=strict",
             )
             apiVersion.set(KotlinVersion.KOTLIN_2_1)
             languageVersion.set(KotlinVersion.KOTLIN_2_1)
@@ -45,7 +45,7 @@ subprojects {
     }
 
     tasks.withType(Jar::class) { enabled = true }
-    
+
     when {
         project.path.startsWith(":apps:") -> {
             tasks.withType<BootJar> { enabled = true }
