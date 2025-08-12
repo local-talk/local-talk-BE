@@ -5,6 +5,7 @@ plugins {
 dependencies {
     implementation(project(":modules:jpa"))
     implementation(project(":modules:web"))
+    implementation(project(":modules:webclient"))
     implementation(project(":supports:logging"))
 
     implementation("org.springframework.boot:spring-boot-starter-actuator")

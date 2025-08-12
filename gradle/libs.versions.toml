@@ -6,8 +6,16 @@ logstash-logback-encoder = "8.0"
 mockk = "1.13.8"
 
 [libraries]
+# Logging
 logstash-logback-encoder = { module = "net.logstash.logback:logstash-logback-encoder", version.ref = "logstash-logback-encoder" }
+
+# Testing
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
+
+# WebClient (외부 API 호출 전용)
+spring-boot-starter-webflux = { module = "org.springframework.boot:spring-boot-starter-webflux" }
+spring-boot-configuration-processor = { module = "org.springframework.boot:spring-boot-configuration-processor" }
+reactor-test = { module = "io.projectreactor:reactor-test" }
 
 [plugins]
 spring-boot = { id = "org.springframework.boot", version.ref = "spring-boot" }
