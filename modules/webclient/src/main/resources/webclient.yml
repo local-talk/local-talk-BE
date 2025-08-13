@@ -1,0 +1,9 @@
+client:
+  webclient:
+    connect-timeout: 30s
+    response-timeout: 30s
+    read-timeout: 30s
+    write-timeout: 30s
+    max-in-memory-size: 10485760 # 10MB
+    max-connections: 500
+    pending-acquire-timeout: 60s
