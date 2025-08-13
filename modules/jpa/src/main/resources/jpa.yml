@@ -16,7 +16,7 @@ datasource:
   hikari:
     master:
       driver-class-name: com.mysql.cj.jdbc.Driver
-      jdbc-url: jdbc:mysql://${MYSQL_HOST}:${MYSQL_PORT}
+      jdbc-url: jdbc:mysql://${MYSQL_HOST}:${MYSQL_PORT}/${MYSQL_DATABASE}
       username: ${MYSQL_USER}
       password: ${MYSQL_PASSWORD}
       pool-name: mysql-master-pool
@@ -72,9 +72,9 @@ spring:
 datasource:
   hikari:
     master:
-      jdbc-url: jdbc:mysql://localhost:3306/localtalk
-      username: root
-      password: root
+      jdbc-url: jdbc:mysql://${MYSQL_HOST}:${MYSQL_PORT}/${MYSQL_DATABASE}
+      username: ${MYSQL_USER}
+      password: ${MYSQL_PASSWORD}
 
 
 ---
@@ -83,6 +83,6 @@ spring.config.activate.on-profile: prod
 datasource:
   hikari:
     master:
-      jdbc-url: jdbc:mysql://localhost:3306/localtalk
-      username: root
-      password: root
+      jdbc-url: jdbc:mysql://${MYSQL_HOST}:${MYSQL_PORT}/${MYSQL_DATABASE}
+      username: ${MYSQL_USER}
+      password: ${MYSQL_PASSWORD}

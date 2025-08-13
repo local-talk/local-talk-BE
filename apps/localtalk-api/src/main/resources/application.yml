@@ -19,7 +19,7 @@ spring:
     active: local
   config:
     import:
-      - optional:file:secrets/.env[.properties]
+      - file:secrets/secrets.properties
       - jpa.yml
       - webclient.yml
   security:
