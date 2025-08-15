@@ -1,0 +1,46 @@
+package com.localtalk.api.auth.domain
+
+import io.mockk.every
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.MockK
+import io.mockk.junit5.MockKExtension
+import io.mockk.verify
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Nested
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
+
+@ExtendWith(MockKExtension::class)
+class TokenServiceTest {
+
+    @MockK
+    lateinit var tokenProvider: TokenProvider
+
+    @MockK
+    lateinit var loginTokenRepository: LoginTokenRepository
+
+    @InjectMockKs
+    lateinit var tokenService: TokenService
+
+    @Nested
+    inner class `토큰을 생성할 때` {
+
+        @Test
+        fun `TokenProvider로 토큰 생성 후 Repository에 저장한다`() {
+            val userId = 123L
+            val role = Role.MEMBER
+            val accessToken = "access-token"
+            val refreshToken = "refresh-token"
+            val savedToken = LoginToken(accessToken, refreshToken)
+
+            every { tokenProvider.generateToken(userId, role) } returns (accessToken to refreshToken)
+            every { loginTokenRepository.save(any<LoginToken>()) } returns savedToken
+
+            val result = tokenService.generateToken(userId, role)
+
+            assertThat(result).isEqualTo(savedToken)
+            verify { tokenProvider.generateToken(userId, role) }
+            verify { loginTokenRepository.save(any<LoginToken>()) }
+        }
+    }
+}
