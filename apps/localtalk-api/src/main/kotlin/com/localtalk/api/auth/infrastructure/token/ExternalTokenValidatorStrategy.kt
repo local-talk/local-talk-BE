@@ -1,8 +1,7 @@
 package com.localtalk.api.auth.infrastructure.token
 
-import com.localtalk.api.auth.domain.ExternalTokenValidator
-import com.localtalk.api.auth.domain.TokenValidationInfo
-import com.localtalk.api.auth.domain.TokenValidationStrategy
+import com.localtalk.api.auth.domain.contract.ExternalTokenValidator
+import com.localtalk.api.auth.domain.SocialLoginIdentifier
 import org.springframework.stereotype.Component
 
 @Component
@@ -13,7 +12,7 @@ class ExternalTokenValidatorStrategy(
     val strategyMap: Map<String, TokenValidationStrategy> =
         strategies.associateBy { it.supportedProviderName }
 
-    override suspend fun validateToken(accessToken: String, providerName: String): TokenValidationInfo {
+    override suspend fun validateToken(accessToken: String, providerName: String): SocialLoginIdentifier {
         val strategy = strategyMap[providerName]
             ?: throw IllegalArgumentException("지원하지 않는 소셜 로그인 프로바이더입니다: $providerName")
 

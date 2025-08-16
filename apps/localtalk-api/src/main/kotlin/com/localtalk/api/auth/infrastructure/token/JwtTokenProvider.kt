@@ -1,7 +1,7 @@
 package com.localtalk.api.auth.infrastructure.token
 
 import com.localtalk.api.auth.domain.AuthRole
-import com.localtalk.api.auth.domain.TokenProvider
+import com.localtalk.api.auth.domain.contract.TokenProvider
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.stereotype.Component
 import java.time.Clock

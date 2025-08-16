@@ -1,7 +1,7 @@
 package com.localtalk.api.auth.entrypoint.mapper
 
-import com.localtalk.api.auth.application.SocialLoginCommand
-import com.localtalk.api.auth.application.SocialLoginInfo
+import com.localtalk.api.auth.application.dto.SocialLoginCommand
+import com.localtalk.api.auth.application.dto.SocialLoginInfo
 import com.localtalk.api.auth.domain.SocialLoginProvider
 import com.localtalk.api.auth.entrypoint.dto.SocialLoginRequest
 import com.localtalk.api.auth.entrypoint.dto.SocialLoginResponse

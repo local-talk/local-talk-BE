@@ -1,6 +1,6 @@
 package com.localtalk.api.auth.domain
 
-data class TokenValidationInfo(
+data class SocialLoginIdentifier(
     val provider: String,
     val socialKey: String,
 )

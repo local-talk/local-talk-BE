@@ -1,7 +1,7 @@
 package com.localtalk.api.auth.infrastructure.client
 
-import com.localtalk.api.auth.domain.TokenValidationInfo
-import com.localtalk.api.auth.domain.TokenValidationStrategy
+import com.localtalk.api.auth.domain.SocialLoginIdentifier
+import com.localtalk.api.auth.infrastructure.token.TokenValidationStrategy
 import org.springframework.stereotype.Component
 
 @Component
@@ -11,10 +11,10 @@ class KakaoTokenValidationStrategy(
 
     override val supportedProviderName: String = "KAKAO"
 
-    override suspend fun validate(accessToken: String): TokenValidationInfo {
+    override suspend fun validate(accessToken: String): SocialLoginIdentifier {
         val response = kakaoApiClient.validateToken(accessToken)
 
-        return TokenValidationInfo(
+        return SocialLoginIdentifier(
             provider = "KAKAO",
             socialKey = response.id.toString(),
         )

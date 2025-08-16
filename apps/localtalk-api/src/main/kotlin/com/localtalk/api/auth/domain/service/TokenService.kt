@@ -1,5 +1,9 @@
-package com.localtalk.api.auth.domain
+package com.localtalk.api.auth.domain.service
 
+import com.localtalk.api.auth.domain.AuthRole
+import com.localtalk.api.auth.domain.LoginToken
+import com.localtalk.api.auth.domain.contract.LoginTokenRepository
+import com.localtalk.api.auth.domain.contract.TokenProvider
 import org.springframework.stereotype.Service
 
 @Service

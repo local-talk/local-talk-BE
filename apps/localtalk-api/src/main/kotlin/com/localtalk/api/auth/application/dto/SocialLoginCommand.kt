@@ -1,4 +1,4 @@
-package com.localtalk.api.auth.application
+package com.localtalk.api.auth.application.dto
 
 import com.localtalk.api.auth.domain.SocialLoginProvider
 

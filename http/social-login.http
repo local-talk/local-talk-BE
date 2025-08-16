@@ -9,11 +9,3 @@ Content-Type: application/json
 {
   "accessToken": "카카오_액세스_토큰"
 }
-
-### 애플 소셜 로그인
-POST {{baseUrl}}/api/v1/social-logins/apple
-Content-Type: application/json
-
-{
-  "accessToken": "애플_ID_토큰"
-}

@@ -1,5 +1,8 @@
 package com.localtalk.api.auth.domain
 
+import com.localtalk.api.auth.domain.contract.LoginTokenRepository
+import com.localtalk.api.auth.domain.contract.TokenProvider
+import com.localtalk.api.auth.domain.service.TokenService
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK

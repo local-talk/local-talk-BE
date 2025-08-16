@@ -1,5 +1,8 @@
-package com.localtalk.api.auth.domain
+package com.localtalk.api.auth.domain.service
 
+import com.localtalk.api.auth.domain.SocialLogin
+import com.localtalk.api.auth.domain.SocialLoginProvider
+import com.localtalk.api.auth.domain.contract.SocialLoginRepository
 import org.springframework.stereotype.Component
 
 @Component
