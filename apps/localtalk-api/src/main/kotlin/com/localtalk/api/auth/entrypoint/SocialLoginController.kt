@@ -2,15 +2,14 @@ package com.localtalk.api.auth.entrypoint
 
 import com.localtalk.api.auth.application.SocialLoginApplicationService
 import com.localtalk.api.auth.domain.SocialLoginProvider
+import com.localtalk.api.auth.entrypoint.document.SocialLoginApi
 import com.localtalk.api.auth.entrypoint.dto.SocialLoginRequest
 import com.localtalk.api.auth.entrypoint.dto.SocialLoginResponse
 import com.localtalk.api.auth.entrypoint.mapper.SocialLoginRestMapper
 import com.localtalk.common.model.RestResponse
 import kotlinx.coroutines.runBlocking
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
@@ -19,12 +18,12 @@ import org.springframework.web.bind.annotation.RestController
 class SocialLoginController(
     val socialLoginApplicationService: SocialLoginApplicationService,
     val socialLoginRestMapper: SocialLoginRestMapper,
-) {
+) : SocialLoginApi {
 
     @PostMapping("/social-logins/{provider}")
-    fun socialLogin(
-        @PathVariable provider: String,
-        @RequestBody request: SocialLoginRequest,
+    override fun socialLogin(
+        provider: String,
+        request: SocialLoginRequest,
     ): ResponseEntity<RestResponse<SocialLoginResponse>> = runBlocking {
         SocialLoginProvider.fromString(provider)
             .let { socialProvider -> socialLoginRestMapper.toCommand(request, socialProvider) }

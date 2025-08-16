@@ -7,7 +7,7 @@ import java.time.Instant
 import java.util.Date
 
 class JwtTokenGenerator(
-    val secretKey: String
+    secretKey: String,
 ) {
 
     val key = Keys.hmacShaKeyFor(secretKey.toByteArray(StandardCharsets.UTF_8))
@@ -16,7 +16,7 @@ class JwtTokenGenerator(
         userId: Long,
         role: String,
         issuedAt: Instant,
-        expiresAt: Instant
+        expiresAt: Instant,
     ): String = Jwts.builder()
         .claim("userId", userId)
         .claim("role", role)

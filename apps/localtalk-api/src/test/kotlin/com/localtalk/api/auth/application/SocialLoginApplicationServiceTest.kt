@@ -39,7 +39,7 @@ class SocialLoginApplicationServiceTest {
 
             coEvery { externalTokenValidator.validateToken("access-token", "KAKAO") } returns validationResult
             every { socialLoginService.findByProviderAndSocialKey(SocialLoginProvider.KAKAO, "social-key-123") } returns existingSocialLogin
-            every { tokenService.generateToken(100L, Role.MEMBER) } returns memberToken
+            every { tokenService.generateToken(100L, AuthRole.MEMBER) } returns memberToken
 
             val result = socialLoginApplicationService.processSocialLogin(command)
 
@@ -55,7 +55,7 @@ class SocialLoginApplicationServiceTest {
             coEvery { externalTokenValidator.validateToken("access-token", "KAKAO") } returns validationResult
             every { socialLoginService.findByProviderAndSocialKey(SocialLoginProvider.KAKAO, "social-key-456") } returns null
             every { socialLoginService.create(SocialLoginProvider.KAKAO, "social-key-456") } returns newSocialLogin
-            every { tokenService.generateToken(any(), Role.TEMPORARY) } returns LoginToken("temp-access", "temp-refresh")
+            every { tokenService.generateToken(any(), AuthRole.TEMPORARY) } returns LoginToken("temp-access", "temp-refresh")
 
             val result = socialLoginApplicationService.processSocialLogin(command)
 
@@ -70,7 +70,7 @@ class SocialLoginApplicationServiceTest {
 
             coEvery { externalTokenValidator.validateToken("access-token", "APPLE") } returns validationResult
             every { socialLoginService.findByProviderAndSocialKey(SocialLoginProvider.APPLE, "social-key-789") } returns unregisteredSocialLogin
-            every { tokenService.generateToken(any(), Role.TEMPORARY) } returns LoginToken("temp-access", "temp-refresh")
+            every { tokenService.generateToken(any(), AuthRole.TEMPORARY) } returns LoginToken("temp-access", "temp-refresh")
 
             val result = socialLoginApplicationService.processSocialLogin(command)
 

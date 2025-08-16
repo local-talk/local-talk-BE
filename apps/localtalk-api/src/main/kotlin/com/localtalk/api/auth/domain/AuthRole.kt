@@ -1,6 +1,6 @@
 package com.localtalk.api.auth.domain
 
-enum class Role {
+enum class AuthRole {
     TEMPORARY,
     MEMBER;
 }

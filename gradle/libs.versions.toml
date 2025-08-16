@@ -5,6 +5,7 @@ spring-dependency-management = "1.1.7"
 logstash-logback-encoder = "8.0"
 mockk = "1.13.8"
 jjwt = "0.12.6"
+springdoc-openapi = "2.3.0"
 
 [libraries]
 # Logging
@@ -17,6 +18,9 @@ jjwt-jackson = { module = "io.jsonwebtoken:jjwt-jackson", version.ref = "jjwt" }
 
 # Testing
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
+
+# API Documentation
+springdoc-openapi = { module = "org.springdoc:springdoc-openapi-starter-webmvc-ui", version.ref = "springdoc-openapi" }
 
 # WebClient (외부 API 호출 전용)
 spring-boot-starter-webflux = { module = "org.springframework.boot:spring-boot-starter-webflux" }

@@ -1,6 +1,6 @@
 package com.localtalk.api.auth.infrastructure
 
-import com.localtalk.api.auth.domain.Role
+import com.localtalk.api.auth.domain.AuthRole
 import com.localtalk.api.auth.infrastructure.token.JwtProperties
 import com.localtalk.api.auth.infrastructure.token.JwtTokenProvider
 import com.localtalk.api.utils.JwtTestUtils
@@ -28,9 +28,9 @@ class JwtTokenProviderTest {
         @Test
         fun `Access Token과 Refresh Token 쌍을 반환한다`() {
             val userId = 123L
-            val role = Role.MEMBER
+            val authRole = AuthRole.MEMBER
 
-            val (accessToken, refreshToken) = jwtTokenProvider.generateToken(userId, role)
+            val (accessToken, refreshToken) = jwtTokenProvider.generateToken(userId, authRole)
 
             assertThat(JwtTestUtils.isValidJwtFormat(accessToken)).isTrue
             assertThat(JwtTestUtils.isValidJwtFormat(refreshToken)).isTrue

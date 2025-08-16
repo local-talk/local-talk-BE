@@ -1,7 +1,7 @@
 package com.localtalk.api.auth.application
 
 import com.localtalk.api.auth.domain.ExternalTokenValidator
-import com.localtalk.api.auth.domain.Role
+import com.localtalk.api.auth.domain.AuthRole
 import com.localtalk.api.auth.domain.SocialLoginService
 import com.localtalk.api.auth.domain.TokenService
 import org.springframework.stereotype.Service
@@ -20,8 +20,8 @@ class SocialLoginApplicationService(
             ?: socialLoginService.create(command.provider, validationResult.socialKey)
 
         val loginToken = socialLogin.takeIf { it.isSignedUser() }
-            ?.let { tokenService.generateToken(id = it.memberId!!, role = Role.MEMBER) }
-            ?: tokenService.generateToken(id = socialLogin.id, role = Role.TEMPORARY)
+            ?.let { tokenService.generateToken(id = it.memberId!!, authRole = AuthRole.MEMBER) }
+            ?: tokenService.generateToken(id = socialLogin.id, authRole = AuthRole.TEMPORARY)
 
         return SocialLoginInfo(
             accessToken = loginToken.accessToken,

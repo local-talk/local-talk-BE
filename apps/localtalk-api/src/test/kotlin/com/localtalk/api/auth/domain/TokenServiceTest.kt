@@ -28,18 +28,18 @@ class TokenServiceTest {
         @Test
         fun `TokenProvider로 토큰 생성 후 Repository에 저장한다`() {
             val userId = 123L
-            val role = Role.MEMBER
+            val authRole = AuthRole.MEMBER
             val accessToken = "access-token"
             val refreshToken = "refresh-token"
             val savedToken = LoginToken(accessToken, refreshToken)
 
-            every { tokenProvider.generateToken(userId, role) } returns (accessToken to refreshToken)
+            every { tokenProvider.generateToken(userId, authRole) } returns (accessToken to refreshToken)
             every { loginTokenRepository.save(any<LoginToken>()) } returns savedToken
 
-            val result = tokenService.generateToken(userId, role)
+            val result = tokenService.generateToken(userId, authRole)
 
             assertThat(result).isEqualTo(savedToken)
-            verify { tokenProvider.generateToken(userId, role) }
+            verify { tokenProvider.generateToken(userId, authRole) }
             verify { loginTokenRepository.save(any<LoginToken>()) }
         }
     }

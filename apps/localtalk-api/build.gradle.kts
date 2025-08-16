@@ -18,6 +18,9 @@ dependencies {
     // Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
+    
+    // Swagger/OpenAPI
+    implementation(libs.springdoc.openapi)
 
     developmentOnly("org.springframework.boot:spring-boot-devtools")
 
