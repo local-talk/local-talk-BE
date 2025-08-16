@@ -1,0 +1,11 @@
+### 소셜 로그인 API 테스트
+
+@baseUrl = http://localhost:8080
+
+### 카카오 소셜 로그인
+POST {{baseUrl}}/api/v1/social-logins/kakao
+Content-Type: application/json
+
+{
+  "access_token": "카카오 Access Token"
+}
