@@ -1,6 +1,8 @@
 package com.localtalk.api.auth.infrastructure
 
 import com.localtalk.api.auth.domain.Role
+import com.localtalk.api.auth.infrastructure.token.JwtProperties
+import com.localtalk.api.auth.infrastructure.token.JwtTokenProvider
 import com.localtalk.api.utils.JwtTestUtils
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested

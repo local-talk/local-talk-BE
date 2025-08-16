@@ -1,4 +1,4 @@
-package com.localtalk.api.auth.infrastructure
+package com.localtalk.api.auth.infrastructure.token
 
 import com.localtalk.api.auth.domain.ExternalTokenValidator
 import com.localtalk.api.auth.domain.TokenValidationInfo

@@ -26,6 +26,7 @@ dependencies {
     testImplementation("org.testcontainers:junit-jupiter")
     testImplementation("org.testcontainers:mysql")
     testImplementation(libs.mockk)
+    testImplementation("com.squareup.okhttp3:mockwebserver:4.12.0")
 
     testImplementation(testFixtures(project(":modules:jpa")))
 }

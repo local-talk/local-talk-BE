@@ -1,4 +1,4 @@
-package com.localtalk.api.auth.infrastructure
+package com.localtalk.api.auth.infrastructure.token
 
 import com.localtalk.api.auth.domain.Role
 import com.localtalk.api.auth.domain.TokenProvider
@@ -18,21 +18,21 @@ class JwtTokenProvider(
 
     override fun generateToken(userId: Long, role: Role): Pair<String, String> {
         val now = clock.instant()
-        
+
         val accessToken = tokenGenerator.createToken(
             userId = userId,
             role = role.name,
             issuedAt = now,
             expiresAt = now.plus(jwtProperties.accessTokenExpiry, ChronoUnit.SECONDS)
         )
-        
+
         val refreshToken = tokenGenerator.createToken(
             userId = userId,
             role = role.name,
             issuedAt = now,
             expiresAt = now.plus(jwtProperties.refreshTokenExpiry, ChronoUnit.SECONDS)
         )
-        
+
         return accessToken to refreshToken
     }
 }

@@ -1,4 +1,4 @@
-package com.localtalk.api.auth.infrastructure
+package com.localtalk.api.auth.infrastructure.token
 
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys

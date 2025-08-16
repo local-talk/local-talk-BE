@@ -33,7 +33,7 @@ class SocialLoginApplicationServiceTest {
         @Test
         fun `기존 가입 사용자라면 Member 권한으로 토큰을 생성한다`() = runBlocking {
             val command = SocialLoginCommand(SocialLoginProvider.KAKAO, "access-token")
-            val validationResult = TokenValidationInfo("social-key-123")
+            val validationResult = TokenValidationInfo("KAKAO", "social-key-123")
             val existingSocialLogin = SocialLogin(SocialLoginProvider.KAKAO, "social-key-123", memberId = 100L)
             val memberToken = LoginToken("member-access-token", "member-refresh-token")
 
@@ -49,7 +49,7 @@ class SocialLoginApplicationServiceTest {
         @Test
         fun `신규 사용자라면 Temporary 권한으로 토큰을 생성한다`() = runBlocking {
             val command = SocialLoginCommand(SocialLoginProvider.KAKAO, "access-token")
-            val validationResult = TokenValidationInfo("social-key-456")
+            val validationResult = TokenValidationInfo("KAKAO", "social-key-456")
             val newSocialLogin = SocialLogin(SocialLoginProvider.KAKAO, "social-key-456")
 
             coEvery { externalTokenValidator.validateToken("access-token", "KAKAO") } returns validationResult
@@ -65,7 +65,7 @@ class SocialLoginApplicationServiceTest {
         @Test
         fun `기존 소셜 로그인이지만 미가입 사용자라면 Temporary 권한으로 토큰을 생성한다`() = runBlocking {
             val command = SocialLoginCommand(SocialLoginProvider.APPLE, "access-token")
-            val validationResult = TokenValidationInfo("social-key-789")
+            val validationResult = TokenValidationInfo("APPLE", "social-key-789")
             val unregisteredSocialLogin = SocialLogin(SocialLoginProvider.APPLE, "social-key-789")
 
             coEvery { externalTokenValidator.validateToken("access-token", "APPLE") } returns validationResult

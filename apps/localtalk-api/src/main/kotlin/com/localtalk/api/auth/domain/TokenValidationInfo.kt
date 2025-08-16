@@ -1,7 +1,6 @@
 package com.localtalk.api.auth.domain
 
 data class TokenValidationInfo(
-    val isValid: Boolean,
+    val provider: String,
     val socialKey: String,
-    val nickname: String,
 )
