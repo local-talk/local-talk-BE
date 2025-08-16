@@ -1,0 +1,64 @@
+package com.localtalk.api.common.exception
+
+import com.localtalk.common.model.RestResponse
+import com.localtalk.logging.common.logger
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
+import org.springframework.validation.method.MethodValidationException
+import org.springframework.web.ErrorResponseException
+import org.springframework.web.HttpRequestMethodNotSupportedException
+import org.springframework.web.bind.annotation.ExceptionHandler
+import org.springframework.web.bind.annotation.RestControllerAdvice
+import org.springframework.web.bind.support.WebExchangeBindException
+import org.springframework.web.method.annotation.HandlerMethodValidationException
+import org.springframework.web.server.MethodNotAllowedException
+import org.springframework.web.server.MissingRequestValueException
+import org.springframework.web.server.NotAcceptableStatusException
+import org.springframework.web.server.ResponseStatusException
+import org.springframework.web.server.ServerErrorException
+import org.springframework.web.server.ServerWebInputException
+import org.springframework.web.server.UnsatisfiedRequestParameterException
+import org.springframework.web.server.UnsupportedMediaTypeStatusException
+
+@RestControllerAdvice
+class GlobalExceptionHandler {
+    val log = logger()
+
+    @ExceptionHandler(
+        MethodNotAllowedException::class,
+        NotAcceptableStatusException::class,
+        UnsupportedMediaTypeStatusException::class,
+        MissingRequestValueException::class,
+        UnsatisfiedRequestParameterException::class,
+        WebExchangeBindException::class,
+        HandlerMethodValidationException::class,
+        ServerWebInputException::class,
+        ServerErrorException::class,
+        ResponseStatusException::class,
+        ErrorResponseException::class,
+        MethodValidationException::class,
+        HttpRequestMethodNotSupportedException::class,
+    )
+    fun handleRestApiRequestException(e: Exception): ResponseEntity<RestResponse<Unit>> {
+        log.debug("Request error occurred", e)
+        return ResponseEntity
+            .badRequest()
+            .body(RestResponse.error(HttpStatus.BAD_REQUEST, e.message ?: "잘못된 요청입니다."))
+    }
+
+    @ExceptionHandler(IllegalArgumentException::class)
+    fun handleIllegalArgumentException(e: IllegalArgumentException): ResponseEntity<RestResponse<Unit>> {
+        log.debug("Invalid argument: {}", e.message)
+        return ResponseEntity
+            .badRequest()
+            .body(RestResponse.error(HttpStatus.BAD_REQUEST, e.message ?: "잘못된 요청입니다."))
+    }
+
+    @ExceptionHandler(Exception::class)
+    fun handleGenericException(e: Exception): ResponseEntity<RestResponse<Unit>> {
+        log.error("Unexpected error occurred", e)
+        return ResponseEntity
+            .status(HttpStatus.INTERNAL_SERVER_ERROR)
+            .body(RestResponse.error(HttpStatus.INTERNAL_SERVER_ERROR, "서버 내부 오류가 발생했습니다."))
+    }
+}
