@@ -1,0 +1,25 @@
+spring:
+  profiles:
+    active: test
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+jwt:
+  secret: testSecretKeyForIntegrationTestOnlyNotForProduction123456789
+  access-token-expiry: 3600
+  refresh-token-expiry: 2592000
+
+client:
+  webclient:
+    connect-timeout: 5s
+    response-timeout: 5s
+    read-timeout: 5s
+    write-timeout: 5s
+    max-in-memory-size: 1048576 # 1MB
+    max-connections: 100
+    pending-acquire-timeout: 10s

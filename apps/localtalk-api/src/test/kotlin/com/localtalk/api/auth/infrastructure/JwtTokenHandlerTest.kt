@@ -1,16 +1,16 @@
 package com.localtalk.api.auth.infrastructure
 
-import com.localtalk.api.auth.infrastructure.token.JwtTokenGenerator
+import com.localtalk.api.auth.infrastructure.token.JwtTokenHandler
 import com.localtalk.api.utils.JwtTestUtils
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import java.time.Instant
 
-class JwtTokenGeneratorTest {
+class JwtTokenHandlerTest {
 
     val secretKey = "test-secret-key-for-jwt-token-generation-must-be-long-enough-for-hmac-sha256"
-    val jwtTokenGenerator = JwtTokenGenerator(secretKey)
+    val jwtTokenHandler = JwtTokenHandler(secretKey)
 
     @Nested
     inner class `JWT 토큰을 생성할 때` {
@@ -22,7 +22,7 @@ class JwtTokenGeneratorTest {
             val issuedAt = Instant.now()
             val expiresAt = issuedAt.plusSeconds(3600)
 
-            val token = jwtTokenGenerator.createToken(userId, role, issuedAt, expiresAt)
+            val token = jwtTokenHandler.createToken(userId, role, issuedAt, expiresAt)
 
             assertThat(JwtTestUtils.isValidJwtFormat(token)).isTrue()
         }

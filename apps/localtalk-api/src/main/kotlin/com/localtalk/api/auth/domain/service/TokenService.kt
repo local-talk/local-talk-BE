@@ -13,7 +13,7 @@ class TokenService(
 ) {
 
     fun generateToken(id: Long, authRole: AuthRole): LoginToken {
-        val (accessToken, refreshToken) = tokenProvider.generateToken(id, authRole)
+        val (accessToken, refreshToken) = tokenProvider.generateToken(id, authRole.name)
         val loginToken = LoginToken(accessToken, refreshToken)
         return loginTokenRepository.save(loginToken)
     }

@@ -4,6 +4,7 @@ import com.localtalk.common.model.RestResponse
 import com.localtalk.logging.common.logger
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.validation.method.MethodValidationException
 import org.springframework.web.ErrorResponseException
 import org.springframework.web.HttpRequestMethodNotSupportedException
@@ -46,9 +47,21 @@ class GlobalExceptionHandler {
             .body(RestResponse.error(HttpStatus.BAD_REQUEST, e.message ?: "잘못된 요청입니다."))
     }
 
+    @ExceptionHandler(HttpMessageNotReadableException::class)
+    fun handleHttpMessageNotReadableException(e: HttpMessageNotReadableException): ResponseEntity<RestResponse<Unit>> {
+        log.debug("Message not readable", e)
+        val message = when (val cause = e.rootCause) {
+            is IllegalArgumentException -> cause.message ?: "잘못된 요청입니다."
+            else -> "잘못된 요청 형식입니다."
+        }
+        return ResponseEntity
+            .badRequest()
+            .body(RestResponse.error(HttpStatus.BAD_REQUEST, message))
+    }
+
     @ExceptionHandler(IllegalArgumentException::class)
     fun handleIllegalArgumentException(e: IllegalArgumentException): ResponseEntity<RestResponse<Unit>> {
-        log.debug("Invalid argument: {}", e.message)
+        log.debug("Invalid argument", e)
         return ResponseEntity
             .badRequest()
             .body(RestResponse.error(HttpStatus.BAD_REQUEST, e.message ?: "잘못된 요청입니다."))

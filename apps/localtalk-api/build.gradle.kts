@@ -9,6 +9,8 @@ dependencies {
     implementation(project(":supports:logging"))
 
     implementation("org.springframework.boot:spring-boot-starter-actuator")
+    implementation("org.springframework.boot:spring-boot-starter-security")
+    implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
 
     implementation(libs.jjwt.api)
     runtimeOnly(libs.jjwt.impl)
@@ -29,4 +31,5 @@ dependencies {
     testImplementation("com.squareup.okhttp3:mockwebserver:4.12.0")
 
     testImplementation(testFixtures(project(":modules:jpa")))
+    testImplementation(testFixtures(project(":modules:webclient")))
 }
