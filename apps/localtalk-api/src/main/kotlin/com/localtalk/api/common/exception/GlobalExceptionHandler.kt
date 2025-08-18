@@ -4,8 +4,10 @@ import com.localtalk.common.model.RestResponse
 import com.localtalk.logging.common.logger
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.validation.method.MethodValidationException
 import org.springframework.web.ErrorResponseException
+import org.springframework.web.HttpMediaTypeNotSupportedException
 import org.springframework.web.HttpRequestMethodNotSupportedException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
@@ -19,6 +21,7 @@ import org.springframework.web.server.ServerErrorException
 import org.springframework.web.server.ServerWebInputException
 import org.springframework.web.server.UnsatisfiedRequestParameterException
 import org.springframework.web.server.UnsupportedMediaTypeStatusException
+import org.springframework.web.servlet.resource.NoResourceFoundException
 
 @RestControllerAdvice
 class GlobalExceptionHandler {
@@ -38,6 +41,7 @@ class GlobalExceptionHandler {
         ErrorResponseException::class,
         MethodValidationException::class,
         HttpRequestMethodNotSupportedException::class,
+        HttpMediaTypeNotSupportedException::class,
     )
     fun handleRestApiRequestException(e: Exception): ResponseEntity<RestResponse<Unit>> {
         log.debug("Request error occurred", e)
@@ -46,9 +50,29 @@ class GlobalExceptionHandler {
             .body(RestResponse.error(HttpStatus.BAD_REQUEST, e.message ?: "잘못된 요청입니다."))
     }
 
+    @ExceptionHandler(NoResourceFoundException::class)
+    fun handleNoResourceFoundException(e: NoResourceFoundException): ResponseEntity<RestResponse<Unit>> {
+        log.debug("Resource not found", e)
+        return ResponseEntity
+            .status(HttpStatus.NOT_FOUND)
+            .body(RestResponse.error(HttpStatus.NOT_FOUND, "요청한 리소스를 찾을 수 없습니다."))
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException::class)
+    fun handleHttpMessageNotReadableException(e: HttpMessageNotReadableException): ResponseEntity<RestResponse<Unit>> {
+        log.debug("Message not readable", e)
+        val message = when (val cause = e.rootCause) {
+            is IllegalArgumentException -> cause.message ?: "잘못된 요청입니다."
+            else -> "잘못된 요청 형식입니다."
+        }
+        return ResponseEntity
+            .badRequest()
+            .body(RestResponse.error(HttpStatus.BAD_REQUEST, message))
+    }
+
     @ExceptionHandler(IllegalArgumentException::class)
     fun handleIllegalArgumentException(e: IllegalArgumentException): ResponseEntity<RestResponse<Unit>> {
-        log.debug("Invalid argument: {}", e.message)
+        log.debug("Invalid argument", e)
         return ResponseEntity
             .badRequest()
             .body(RestResponse.error(HttpStatus.BAD_REQUEST, e.message ?: "잘못된 요청입니다."))
