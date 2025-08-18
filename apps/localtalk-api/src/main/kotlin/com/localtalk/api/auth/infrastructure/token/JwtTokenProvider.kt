@@ -1,6 +1,5 @@
 package com.localtalk.api.auth.infrastructure.token
 
-import com.localtalk.api.auth.domain.AuthRole
 import com.localtalk.api.auth.domain.contract.TokenProvider
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.stereotype.Component
@@ -14,21 +13,21 @@ class JwtTokenProvider(
     val clock: Clock = Clock.systemDefaultZone(),
 ) : TokenProvider {
 
-    val tokenGenerator = JwtTokenGenerator(jwtProperties.secret)
+    val tokenHandler = JwtTokenHandler(jwtProperties.secret)
 
-    override fun generateToken(userId: Long, authRole: AuthRole): Pair<String, String> {
+    override fun generateToken(id: Long, role: String): Pair<String, String> {
         val now = clock.instant()
 
-        val accessToken = tokenGenerator.createToken(
-            userId = userId,
-            role = authRole.name,
+        val accessToken = tokenHandler.createToken(
+            id = id,
+            role = role,
             issuedAt = now,
             expiresAt = now.plus(jwtProperties.accessTokenExpiry, ChronoUnit.SECONDS)
         )
 
-        val refreshToken = tokenGenerator.createToken(
-            userId = userId,
-            role = authRole.name,
+        val refreshToken = tokenHandler.createToken(
+            id = id,
+            role = role,
             issuedAt = now,
             expiresAt = now.plus(jwtProperties.refreshTokenExpiry, ChronoUnit.SECONDS)
         )
