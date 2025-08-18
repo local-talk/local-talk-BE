@@ -1,8 +1,11 @@
 package com.localtalk.api.auth.application
 
 import com.localtalk.api.auth.application.dto.SocialLoginCommand
+import com.localtalk.api.auth.domain.AuthRole
+import com.localtalk.api.auth.domain.LoginToken
+import com.localtalk.api.auth.domain.SocialLogin
 import com.localtalk.api.auth.domain.SocialLoginIdentifier
-import com.localtalk.api.auth.domain.*
+import com.localtalk.api.auth.domain.SocialLoginProvider
 import com.localtalk.api.auth.domain.contract.ExternalTokenValidator
 import com.localtalk.api.auth.domain.service.SocialLoginService
 import com.localtalk.api.auth.domain.service.TokenService

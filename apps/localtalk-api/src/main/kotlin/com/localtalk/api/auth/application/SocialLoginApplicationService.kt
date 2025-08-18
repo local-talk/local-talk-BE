@@ -2,8 +2,8 @@ package com.localtalk.api.auth.application
 
 import com.localtalk.api.auth.application.dto.SocialLoginCommand
 import com.localtalk.api.auth.application.dto.SocialLoginInfo
-import com.localtalk.api.auth.domain.contract.ExternalTokenValidator
 import com.localtalk.api.auth.domain.AuthRole
+import com.localtalk.api.auth.domain.contract.ExternalTokenValidator
 import com.localtalk.api.auth.domain.service.SocialLoginService
 import com.localtalk.api.auth.domain.service.TokenService
 import org.springframework.stereotype.Service
