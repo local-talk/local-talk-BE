@@ -2,6 +2,7 @@ package com.localtalk.api.auth.infrastructure.client
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import kotlinx.coroutines.reactor.awaitSingle
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.WebClientResponseException
@@ -10,17 +11,20 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 class KakaoApiClient(
     val webClient: WebClient,
     val objectMapper: ObjectMapper,
+    @param:Value("\${kakao.api.base-url}") val baseUrl: String,
 ) {
 
     companion object {
-        private const val KAKAO_TOKEN_INFO_URL = "https://kapi.kakao.com/v1/user/access_token_info"
+        private const val TOKEN_INFO_PATH = "/v1/user/access_token_info"
     }
 
     suspend fun validateToken(accessToken: String): KakaoAccessTokenQueryResponse {
+        val requestUrl = "$baseUrl$TOKEN_INFO_PATH"
+
         return try {
             webClient
                 .get()
-                .uri(KAKAO_TOKEN_INFO_URL)
+                .uri(requestUrl)
                 .header("Authorization", "Bearer $accessToken")
                 .retrieve()
                 .bodyToMono(KakaoAccessTokenQueryResponse::class.java)

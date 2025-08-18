@@ -28,6 +28,10 @@ jwt:
   access-token-expiry: 3600
   refresh-token-expiry: 2592000
 
+kakao:
+  api:
+    base-url: https://kapi.kakao.com
+
 ---
 spring:
   config:
