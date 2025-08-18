@@ -21,6 +21,8 @@ springdoc-openapi = { module = "org.springdoc:springdoc-openapi-starter-webmvc-u
 
 spring-boot-starter-webflux = { module = "org.springframework.boot:spring-boot-starter-webflux" }
 spring-boot-configuration-processor = { module = "org.springframework.boot:spring-boot-configuration-processor" }
+spring-boot-starter-test = { module = "org.springframework.boot:spring-boot-starter-test" }
+spring-test = { module = "org.springframework:spring-test" }
 reactor-test = { module = "io.projectreactor:reactor-test" }
 
 [plugins]
