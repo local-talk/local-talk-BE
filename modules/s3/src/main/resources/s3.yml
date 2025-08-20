@@ -1,0 +1,49 @@
+spring:
+  cloud:
+    aws:
+      s3:
+        enabled: true
+        region: ap-northeast-2
+
+storage:
+  s3:
+    default-bucket: localtalk-storage
+    region: ap-northeast-2
+
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+  cloud:
+    aws:
+      s3:
+        endpoint: http://localhost:4566
+        region: us-east-1  # LocalStack 기본 리전
+      credentials:
+        access-key: test
+        secret-key: test
+
+storage:
+  s3:
+    default-bucket: test-bucket
+    region: us-east-1
+
+---
+spring:
+  config:
+    activate:
+      on-profile: test
+  cloud:
+    aws:
+      s3:
+        endpoint: http://localhost:4566
+        region: us-east-1
+      credentials:
+        access-key: test
+        secret-key: test
+
+storage:
+  s3:
+    default-bucket: test-bucket
+    region: us-east-1

@@ -6,6 +6,8 @@ logstash-logback-encoder = "8.0"
 mockk = "1.13.8"
 jjwt = "0.12.6"
 springdoc-openapi = "2.8.9"
+spring-cloud-aws = "3.2.1"
+testcontainers = "1.20.4"
 
 [libraries]
 # Logging
@@ -24,6 +26,13 @@ spring-boot-configuration-processor = { module = "org.springframework.boot:sprin
 spring-boot-starter-test = { module = "org.springframework.boot:spring-boot-starter-test" }
 spring-test = { module = "org.springframework:spring-test" }
 reactor-test = { module = "io.projectreactor:reactor-test" }
+
+# Spring Cloud AWS
+spring-cloud-aws-starter-s3 = { module = "io.awspring.cloud:spring-cloud-aws-starter-s3", version.ref = "spring-cloud-aws" }
+spring-cloud-aws-testcontainers = { module = "io.awspring.cloud:spring-cloud-aws-testcontainers", version.ref = "spring-cloud-aws" }
+
+# TestContainers
+testcontainers-localstack = { module = "org.testcontainers:localstack", version.ref = "testcontainers" }
 
 [plugins]
 spring-boot = { id = "org.springframework.boot", version.ref = "spring-boot" }
