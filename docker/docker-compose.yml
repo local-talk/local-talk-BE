@@ -11,3 +11,16 @@ services:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: localtalk
       TZ: UTC
+
+  localstack:
+    container_name: localstack-main
+    image: localstack/localstack:3.8.1
+    ports:
+      - "4566:4566"
+      - "4510-4559:4510-4559"
+    environment:
+      - DEBUG=1
+      - SERVICES=s3
+    volumes:
+      - "./localstack:/var/lib/localstack"
+      - "/var/run/docker.sock:/var/run/docker.sock"
