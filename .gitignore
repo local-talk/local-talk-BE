@@ -43,3 +43,4 @@ out/
 logs/
 *.log
 *CLAUDE*
+docker/localstack
