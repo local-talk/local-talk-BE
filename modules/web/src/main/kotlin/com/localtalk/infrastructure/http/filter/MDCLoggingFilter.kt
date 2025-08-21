@@ -11,7 +11,6 @@ import org.springframework.core.Ordered
 import org.springframework.core.annotation.Order
 import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
-import org.springframework.web.util.ContentCachingResponseWrapper
 
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
@@ -27,17 +26,14 @@ class MDCLoggingFilter(private val logFormatter: HttpLogFormatter) : OncePerRequ
         val startTime = System.currentTimeMillis()
 
         val wrappedRequest = CachedBodyRequestWrapper(request)
-        val wrappedResponse = ContentCachingResponseWrapper(response)
 
         MDCUtils.withTrace {
             log.info(logFormatter.formatRequest(wrappedRequest))
 
-            filterChain.doFilter(wrappedRequest, wrappedResponse)
+            filterChain.doFilter(wrappedRequest, response)
 
             val duration = System.currentTimeMillis() - startTime
-            log.info(logFormatter.formatResponse(wrappedResponse, duration))
-
-            wrappedResponse.copyBodyToResponse()
+            log.info("response duration: $duration ms")
         }
     }
 }
