@@ -59,16 +59,18 @@ data class TestRequest(
     }
 }
 
+
 @DisplayName("GlobalExceptionHandler 테스트")
 class GlobalExceptionHandlerTest : IntegrationTest() {
-
     @Nested
     @DisplayName("REST API 예외 처리")
     inner class RestApiExceptionHandling {
 
         @Test
         fun `지원하지 않는 HTTP 메서드 요청시 400 상태코드를 반환한다`() {
-            webTestClient.post()
+            val client = loginAsTemporaryMember()
+
+            client.post()
                 .uri("/test-rest-api-exceptions/get-only")
                 .exchange()
                 .expectStatus().isBadRequest
@@ -80,7 +82,9 @@ class GlobalExceptionHandlerTest : IntegrationTest() {
 
         @Test
         fun `잘못된 Content-Type으로 요청시 400 상태코드를 반환한다`() {
-            webTestClient.post()
+            val client = loginAsTemporaryMember()
+
+            client.post()
                 .uri("/test-rest-api-exceptions/post-only")
                 .contentType(MediaType.TEXT_PLAIN)
                 .bodyValue("plain text")
@@ -99,7 +103,9 @@ class GlobalExceptionHandlerTest : IntegrationTest() {
 
         @Test
         fun `잘못된 JSON 형식 요청시 400 상태코드와 형식 오류 메시지를 반환한다`() {
-            webTestClient.post()
+            val client = loginAsTemporaryMember()
+
+            client.post()
                 .uri("/test-json-exceptions/validation-error")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue("{invalid json}")
@@ -113,7 +119,9 @@ class GlobalExceptionHandlerTest : IntegrationTest() {
 
         @Test
         fun `JSON 파싱 중 IllegalArgumentException 발생시 해당 예외 메시지를 반환한다`() {
-            webTestClient.post()
+            val client = loginAsTemporaryMember()
+
+            client.post()
                 .uri("/test-json-exceptions/validation-error")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue("""{"validField": ""}""")
@@ -127,7 +135,9 @@ class GlobalExceptionHandlerTest : IntegrationTest() {
 
         @Test
         fun `JSON 파싱 중 IllegalArgumentException 발생시 null인 경우 기본 메시지를 반환한다`() {
-            webTestClient.post()
+            val client = loginAsTemporaryMember()
+
+            client.post()
                 .uri("/test-json-exceptions/validation-error")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue("""{"validField": null}""")
@@ -146,7 +156,9 @@ class GlobalExceptionHandlerTest : IntegrationTest() {
 
         @Test
         fun `직접 던진 IllegalArgumentException 발생시 400 상태코드와 예외 메시지를 반환한다`() {
-            webTestClient.get()
+            val client = loginAsTemporaryMember()
+
+            client.get()
                 .uri("/test-argument-exceptions/illegal-argument")
                 .exchange()
                 .expectStatus().isBadRequest
@@ -163,7 +175,9 @@ class GlobalExceptionHandlerTest : IntegrationTest() {
 
         @Test
         fun `Exception 발생시 500 상태코드와 서버 오류 메시지를 반환한다`() {
-            webTestClient.get()
+            val client = loginAsTemporaryMember()
+
+            client.get()
                 .uri("/test-generic-exceptions/runtime-exception")
                 .exchange()
                 .expectStatus().is5xxServerError
@@ -175,7 +189,9 @@ class GlobalExceptionHandlerTest : IntegrationTest() {
 
         @Test
         fun `존재하지 않는 엔드포인트 요청시 404 상태코드를 반환한다`() {
-            webTestClient.get()
+            val client = loginAsTemporaryMember()
+
+            client.get()
                 .uri("/non-existent-endpoint")
                 .exchange()
                 .expectStatus().isNotFound
