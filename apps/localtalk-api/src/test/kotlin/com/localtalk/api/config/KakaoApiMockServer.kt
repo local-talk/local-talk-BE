@@ -14,7 +14,7 @@ class KakaoApiMockServer {
             System.setProperty("kakao.api.base-url", mockWebServer.url("/").toString())
         }
 
-        fun enqueueSuccessResponse(id: Long, expiresIn: Int = 3600, appId: Int = 12345) {
+        fun enqueueSuccessResponse(id: Long = 1L, expiresIn: Int = 3600, appId: Int = 12345) {
             val responseBody = """
                 {
                     "id": $id,
