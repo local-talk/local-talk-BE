@@ -31,5 +31,4 @@ dependencies {
     testImplementation("com.squareup.okhttp3:mockwebserver:4.12.0")
 
     testImplementation(testFixtures(project(":modules:jpa")))
-    testImplementation(testFixtures(project(":modules:webclient")))
 }
