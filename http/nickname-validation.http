@@ -1,0 +1,23 @@
+### 닉네임 검증 API 테스트
+
+@baseUrl = http://localhost:8080
+
+### 소셜 로그인
+POST {{baseUrl}}/api/v1/social-logins/kakao
+Content-Type: application/json
+
+{
+  "access_token": "IswGOP44exY8ttMaF_TNGG7OsLqHjKgVAAAAAQoNG5oAAAGYzPdATSEj9baI01p6"
+}
+
+> {% client.global.set("auth_token", response.body.data.access_token); %}
+
+### 닉네임 검증
+POST {{baseUrl}}/api/v1/members/nickname/validate
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
+
+
+{
+  "nickname": "J"
+}
