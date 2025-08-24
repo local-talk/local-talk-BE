@@ -44,6 +44,7 @@ class SecurityConfig(
             .authorizeHttpRequests { auth ->
                 auth
                     .requestMatchers("/api/v1/social-logins/**").permitAll()
+                    .requestMatchers("/api/v1/districts/**").permitAll()
                     .requestMatchers("/api/v1/members/nickname/validate").authenticated()
                     .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                     .requestMatchers("/api/v1/**").hasRole(AuthRole.MEMBER.name)

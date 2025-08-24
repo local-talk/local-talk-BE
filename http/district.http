@@ -1,0 +1,7 @@
+### 지역(구/동) 정보 API 테스트
+
+@baseUrl = http://localhost:8080
+
+### 동 목록 조회
+GET {{baseUrl}}/api/v1/districts/seongbuk/dongs
+Content-Type: application/json
