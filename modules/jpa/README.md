@@ -9,7 +9,7 @@ MySQL 연결 설정, 공통 엔티티 클래스, 그리고 테스트 인프라�
 이 모듈을 추가하면:
 
 - 🗄️ **HikariCP** 기반 고성능 MySQL 연결 풀 설정
-- 📅 **BaseEntity** - 자동 audit 필드와 soft delete 기능
+- 📅 **베이스 엔티티** - 자동 audit 필드와 soft/hard delete 선택
 - 🧪 **testFixtures** - MySQL TestContainer와 데이터베이스 정리 유틸리티
 - ⚡ **JPA 최적화** - 배치 처리와 UTC 시간대 설정
 
@@ -26,8 +26,10 @@ dependencies {
 
 ### 2. Entity 클래스 만들기
 
+#### 소프트 딜리트가 필요한 엔티티 (회원, 게시글 등)
+
 ```kotlin
-import com.localtalk.domain.BaseEntity
+import com.localtalk.domain.SoftDeleteBaseEntity
 import jakarta.persistence.Entity
 import jakarta.persistence.Table
 
@@ -39,13 +41,28 @@ class Member(
     
     @Column(name = "email", nullable = false)
     val email: String,
-) : BaseEntity() {
+) : SoftDeleteBaseEntity() {
 
     // 비즈니스 로직이나 validation을 추가하려면
     override fun validate() {
         require(email.contains("@")) { "유효하지 않은 이메일 형식입니다" }
     }
 }
+```
+
+#### 하드 딜리트가 필요한 엔티티 (토큰, 로그 등)
+
+```kotlin
+import com.localtalk.domain.HardDeleteBaseEntity
+import jakarta.persistence.Entity
+import jakarta.persistence.Table
+
+@Entity
+@Table(name = "refresh_token")
+class RefreshToken(
+    @Column(name = "token", nullable = false, unique = true)
+    val token: String,
+) : HardDeleteBaseEntity()
 ```
 
 ### 3. Repository 만들기
@@ -96,11 +113,21 @@ class MemberRepositoryTest(
 
 ## 자동으로 뭐가 되나요?
 
-### 1. BaseEntity 자동 기능
+### 1. 베이스 엔티티 선택 가이드
 
-모든 엔티티에 자동으로 추가되는 필드들:
+**사용 가능한 베이스 엔티티:**
+- `SoftDeleteBaseEntity` - 소프트 딜리트 (deleted_at 필드 포함)
+- `HardDeleteBaseEntity` - 하드 딜리트 (deleted_at 필드 없음)
+- ❌ `BaseEntity` - 직접 사용 금지
+
+**언제 어떤걸 쓰나요?**
+- **SoftDeleteBaseEntity**: 회원, 게시글, 댓글 등 복구 가능성이 있는 데이터
+- **HardDeleteBaseEntity**: 토큰, 로그, 임시 데이터 등 완전 삭제가 필요한 데이터
+
+### 2. 자동으로 추가되는 필드들
 
 ```sql
+-- SoftDeleteBaseEntity 사용시
 CREATE TABLE member (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
@@ -109,9 +136,18 @@ CREATE TABLE member (
     updated_at DATETIME(6) NOT NULL,    -- 자동 업데이트 📅
     deleted_at DATETIME(6) NULL         -- Soft Delete 🗑️
 );
+
+-- HardDeleteBaseEntity 사용시
+CREATE TABLE refresh_token (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    token VARCHAR(255) NOT NULL,
+    created_at DATETIME(6) NOT NULL,    -- 자동 생성 📅
+    updated_at DATETIME(6) NOT NULL     -- 자동 업데이트 📅
+    -- deleted_at 필드 없음!
+);
 ```
 
-### 2. Soft Delete 기능
+### 3. Soft Delete 기능 (SoftDeleteBaseEntity만)
 
 ```kotlin
 // 데이터를 실제로 삭제하지 않고 deleted_at만 설정
@@ -119,13 +155,16 @@ member.delete()  // deleted_at = 현재시간
 
 // 삭제 취소
 member.restore()  // deleted_at = null
+
+// HardDeleteBaseEntity는 이 기능이 없습니다!
+// refreshTokenRepository.delete(token)  // 진짜 삭제됨
 ```
 
-### 3. 자동 Validation
+### 4. 자동 Validation
 
 ```kotlin
 @Entity
-class Member : BaseEntity() {
+class Member : SoftDeleteBaseEntity() {
     override fun validate() {
         require(name.isNotBlank()) { "이름은 필수입니다" }
         require(email.contains("@")) { "올바른 이메일 형식이 아닙니다" }

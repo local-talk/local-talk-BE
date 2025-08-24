@@ -1,6 +1,6 @@
 package com.localtalk.api.auth.domain
 
-import com.localtalk.domain.BaseEntity
+import com.localtalk.domain.SoftDeleteBaseEntity
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
@@ -23,6 +23,6 @@ class SocialLogin(
     @Column(name = "member_id")
     @Comment("연결된 회원 ID")
     var memberId: Long? = null,
-) : BaseEntity() {
+) : SoftDeleteBaseEntity() {
     fun isSignedUser(): Boolean = memberId != null
 }

@@ -1,6 +1,6 @@
 package com.localtalk.api.member.domain
 
-import com.localtalk.domain.BaseEntity
+import com.localtalk.domain.SoftDeleteBaseEntity
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Table
@@ -12,4 +12,4 @@ class Member(
     @Column(name = "nickname", nullable = false)
     @Comment("닉네임")
     val nickname: Nickname,
-) : BaseEntity()
+) : SoftDeleteBaseEntity()
