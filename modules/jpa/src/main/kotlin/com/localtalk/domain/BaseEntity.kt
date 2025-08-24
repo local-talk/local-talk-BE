@@ -1,5 +1,6 @@
 package com.localtalk.domain
 
+import com.localtalk.internal.InternalBaseEntityApi
 import jakarta.persistence.Column
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
@@ -9,6 +10,7 @@ import jakarta.persistence.PrePersist
 import jakarta.persistence.PreUpdate
 import java.time.ZonedDateTime
 
+@InternalBaseEntityApi
 @MappedSuperclass
 abstract class BaseEntity {
     @Id
@@ -21,10 +23,6 @@ abstract class BaseEntity {
 
     @Column(name = "updated_at", nullable = false)
     lateinit var updatedAt: ZonedDateTime
-        protected set
-
-    @Column(name = "deleted_at")
-    var deletedAt: ZonedDateTime? = null
         protected set
 
     open fun validate() = Unit
@@ -42,13 +40,5 @@ abstract class BaseEntity {
     private fun preUpdate() {
         validate()
         updatedAt = ZonedDateTime.now()
-    }
-
-    fun delete() {
-        deletedAt = deletedAt ?: ZonedDateTime.now()
-    }
-
-    fun restore() {
-        deletedAt = null
     }
 }
