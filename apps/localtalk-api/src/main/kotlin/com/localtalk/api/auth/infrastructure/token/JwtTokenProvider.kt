@@ -1,5 +1,7 @@
 package com.localtalk.api.auth.infrastructure.token
 
+import com.localtalk.api.auth.domain.AuthMember
+import com.localtalk.api.auth.domain.AuthRole
 import com.localtalk.api.auth.domain.contract.TokenProvider
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.stereotype.Component
@@ -33,5 +35,14 @@ class JwtTokenProvider(
         )
 
         return accessToken to refreshToken
+    }
+
+
+    override fun parseToken(token: String): AuthMember {
+        val claims = tokenHandler.parseToken(token)
+        val id = (claims[ID_CLAIM] as Number).toLong()
+        val role = claims.get(ROLE_CLAIM, String::class.java)
+
+        return AuthMember(id, AuthRole.valueOf(role))
     }
 }
