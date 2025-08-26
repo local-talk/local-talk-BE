@@ -1,7 +1,6 @@
 package com.localtalk.api.support
 
 import com.fasterxml.jackson.databind.JsonNode
-import com.localtalk.api.config.KakaoApiMockServer
 import com.localtalk.config.MysqlTestContainerConfig
 import com.localtalk.utils.JpaDatabaseCleaner
 import org.junit.jupiter.api.AfterEach
@@ -16,7 +15,7 @@ import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.test.web.reactive.server.returnResult
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Import(MysqlTestContainerConfig::class, KakaoApiMockServer::class)
+@Import(MysqlTestContainerConfig::class, KakaoApiMockServer::class, TestClockConfig::class)
 @AutoConfigureWebTestClient
 @ActiveProfiles("test")
 abstract class IntegrationTest {
@@ -27,9 +26,13 @@ abstract class IntegrationTest {
     @Autowired
     protected lateinit var databaseCleaner: JpaDatabaseCleaner
 
+    @Autowired
+    protected lateinit var clock: MutableClock
+
     @AfterEach
     fun tearDown() {
         databaseCleaner.truncateAllTables()
+        clock.now()
     }
 
     fun loginAsTemporaryMember(): WebTestClient {

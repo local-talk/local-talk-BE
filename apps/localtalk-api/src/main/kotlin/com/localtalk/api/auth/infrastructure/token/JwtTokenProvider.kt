@@ -10,7 +10,7 @@ import java.time.temporal.ChronoUnit
 @EnableConfigurationProperties(JwtProperties::class)
 class JwtTokenProvider(
     val jwtProperties: JwtProperties,
-    val clock: Clock = Clock.systemDefaultZone(),
+    val clock: Clock,
 ) : TokenProvider {
 
     val tokenHandler = JwtTokenHandler(jwtProperties.secret)
@@ -22,14 +22,14 @@ class JwtTokenProvider(
             id = id,
             role = role,
             issuedAt = now,
-            expiresAt = now.plus(jwtProperties.accessTokenExpiry, ChronoUnit.SECONDS)
+            expiresAt = now.plus(jwtProperties.accessTokenExpiry, ChronoUnit.SECONDS),
         )
 
         val refreshToken = tokenHandler.createToken(
             id = id,
             role = role,
             issuedAt = now,
-            expiresAt = now.plus(jwtProperties.refreshTokenExpiry, ChronoUnit.SECONDS)
+            expiresAt = now.plus(jwtProperties.refreshTokenExpiry, ChronoUnit.SECONDS),
         )
 
         return accessToken to refreshToken
