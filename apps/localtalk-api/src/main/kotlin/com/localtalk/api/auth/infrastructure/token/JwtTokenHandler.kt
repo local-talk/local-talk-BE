@@ -1,6 +1,8 @@
 package com.localtalk.api.auth.infrastructure.token
 
+import com.localtalk.logging.common.logger
 import io.jsonwebtoken.Claims
+import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
 import java.nio.charset.StandardCharsets
@@ -14,6 +16,7 @@ const val ROLE_CLAIM = "role"
 class JwtTokenHandler(
     secretKey: String,
 ) {
+    private val log = logger()
 
     val key: SecretKey = Keys.hmacShaKeyFor(secretKey.toByteArray(StandardCharsets.UTF_8))
 
@@ -30,9 +33,14 @@ class JwtTokenHandler(
         .signWith(key)
         .compact()
 
-    fun parseToken(token: String): Claims = Jwts.parser()
-        .verifyWith(key)
-        .build()
-        .parseSignedClaims(token)
-        .payload
+    fun parseToken(token: String): Claims = try {
+        Jwts.parser()
+            .verifyWith(key)
+            .build()
+            .parseSignedClaims(token)
+            .payload
+    } catch (e: ExpiredJwtException) {
+        log.debug("Expired JWT token: {}", token, e)
+        throw IllegalStateException("만료된 토큰입니다.")
+    }
 }

@@ -9,5 +9,9 @@ import jakarta.persistence.Table
 @Table(name = "refresh_token")
 class RefreshToken(
     @Column(name = "token", nullable = false, unique = true)
-    val token: String,
-) : HardDeleteBaseEntity()
+    var token: String,
+) : HardDeleteBaseEntity() {
+    fun update(token: String) {
+        this.token = token
+    }
+}
