@@ -1,7 +1,7 @@
 package com.localtalk.api.auth.entrypoint
 
-import com.localtalk.api.config.KakaoApiMockServer
 import com.localtalk.api.support.IntegrationTest
+import com.localtalk.api.support.KakaoApiMockServer
 import org.junit.jupiter.api.Test
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType

@@ -1,4 +1,4 @@
-package com.localtalk.api.config
+package com.localtalk.api.support
 
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
