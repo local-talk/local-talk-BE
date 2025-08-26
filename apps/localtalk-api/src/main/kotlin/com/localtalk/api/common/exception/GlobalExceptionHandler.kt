@@ -70,8 +70,8 @@ class GlobalExceptionHandler {
             .body(RestResponse.error(HttpStatus.BAD_REQUEST, message))
     }
 
-    @ExceptionHandler(IllegalArgumentException::class)
-    fun handleIllegalArgumentException(e: IllegalArgumentException): ResponseEntity<RestResponse<Unit>> {
+    @ExceptionHandler(IllegalArgumentException::class, IllegalStateException::class)
+    fun handleIllegalArgumentException(e: Exception): ResponseEntity<RestResponse<Unit>> {
         log.debug("Invalid argument", e)
         return ResponseEntity
             .badRequest()
