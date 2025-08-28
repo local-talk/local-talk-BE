@@ -12,8 +12,8 @@ class EventApplicationMapper {
         isLoggedIn: Boolean,
         isBookmarked: Boolean,
         isVisited: Boolean,
+        totalReviewCount: Int,
         averageRating: Double,
-        totalReviewCount: Int
     ): EventDetailInfo {
         return EventDetailInfo(
             title = event.title,
@@ -32,8 +32,8 @@ class EventApplicationMapper {
             isLoggedIn = isLoggedIn,
             isBookmarked = isBookmarked,
             isVisited = isVisited,
-            averageRating = averageRating,
             totalReviewCount = totalReviewCount,
+            averageRating = averageRating,
         )
     }
 }

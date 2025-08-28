@@ -15,27 +15,28 @@ class EventApplicationService(
 
     @Transactional(readOnly = true)
     fun getEventDetail(eventId: Long, memberId: Long?): EventDetailInfo {
-        val event = eventService.findByIdActive(eventId)
-            ?: throw IllegalArgumentException("존재하지 않는 행사입니다")
-
-        val imageUrl = getMainImageUrl(event)
-        val isLoggedIn = memberId != null
-        val isBookmarked = memberId?.let { eventService.isUserBookmarked(eventId, it) } ?: false
-        val isVisited = memberId?.let { eventService.isUserVisited(eventId, it) } ?: false
-        val (averageRating, totalCount) = eventService.getReviewSummary(eventId)
+        val event = findEventOrThrow(eventId)
+        val totalCount = eventService.getTotalReviewCount(eventId)
+        val averageRating = calculateAverageRating(totalCount, eventId)
 
         return eventApplicationMapper.toEventDetailInfo(
             event = event,
-            imageUrl = imageUrl,
-            isLoggedIn = isLoggedIn,
-            isBookmarked = isBookmarked,
-            isVisited = isVisited,
-            averageRating = averageRating,
-            totalReviewCount = totalCount.toInt()
+            imageUrl = getImageUrl(event),
+            isLoggedIn = memberId != null,
+            isBookmarked = memberId?.let { eventService.isMemberBookmarked(eventId, it) } ?: false,
+            isVisited = memberId?.let { eventService.isMemberVisited(eventId, it) } ?: false,
+            totalReviewCount = totalCount.toInt(),
+            averageRating = averageRating
         )
     }
 
-    private fun getMainImageUrl(event: Event): String {
-        return "/images/default-event.jpg" // TODO: EventImage 연관관계 설정 후 구현
+    private fun findEventOrThrow(eventId: Long): Event =
+        eventService.findByIdActive(eventId) ?: throw IllegalArgumentException("존재하지 않는 행사입니다")
+
+    private fun calculateAverageRating(totalCount: Long, eventId: Long): Double =
+        if (totalCount > 0) eventService.getAverageRating(eventId) else 0.0
+
+    private fun getImageUrl(event: Event): String {
+        return "https://example/default.jpg" // TODO: S3 설정 후 구현
     }
 }
