@@ -1,4 +1,4 @@
-import org.gradle.kotlin.dsl.withType
+import org.gradle.api.Project.DEFAULT_VERSION
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
@@ -12,10 +12,22 @@ plugins {
     alias(libs.plugins.spring.dependency.management) apply false
 }
 
+
+fun getGitHash(): String {
+    return runCatching {
+        providers.exec { commandLine("git", "rev-parse", "--short", "HEAD") }
+            .standardOutput
+            .asText
+            .get()
+            .trim()
+    }.getOrElse { "init" }
+}
+
+
 allprojects {
     val projectGroup: String by project
     group = projectGroup
-    version = "0.0.1-SNAPSHOT"
+    version = if (version == DEFAULT_VERSION) getGitHash() else version
 
     repositories {
         mavenCentral()
@@ -50,6 +62,7 @@ subprojects {
         project.path.startsWith(":apps:") -> {
             tasks.withType<BootJar> { enabled = true }
         }
+
         else -> {
             tasks.withType<BootJar> { enabled = false }
         }
