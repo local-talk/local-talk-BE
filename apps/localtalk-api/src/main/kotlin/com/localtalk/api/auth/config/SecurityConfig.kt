@@ -35,6 +35,7 @@ class SecurityConfig(
                     .requestMatchers("/api/v1/social-logins/**").permitAll()
                     .requestMatchers("/api/v1/districts/**").permitAll()
                     .requestMatchers("/api/v1/auth/refresh").permitAll()
+                    .requestMatchers("/api/v1/interests/**").permitAll()
                     .requestMatchers("/api/v1/members/nickname/validate").authenticated()
                     .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                     .requestMatchers("/api/v1/**").hasRole(AuthRole.MEMBER.name)
