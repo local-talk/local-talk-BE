@@ -41,7 +41,7 @@ class EventControllerTest : IntegrationTest() {
     }
 
     @Nested
-    inner class `GET events eventId` {
+    inner class `행사 상세정보 조회` {
 
         @Test
         fun `비회원이 행사 상세정보 조회를 성공한다`() {
