@@ -1,5 +1,6 @@
 package com.localtalk.api.event.entrypoint.document
 
+import com.localtalk.api.auth.domain.AuthMember
 import com.localtalk.api.event.entrypoint.dto.EventDetailResponse
 import com.localtalk.common.model.RestResponse
 import io.swagger.v3.oas.annotations.Operation
@@ -10,6 +11,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.annotation.AuthenticationPrincipal
+import org.springframework.security.oauth2.jwt.Jwt
 import org.springframework.web.bind.annotation.PathVariable
 
 @Tag(name = "행사", description = "행사 관련 API")
@@ -40,8 +43,8 @@ interface EventApi {
     "startDate": "2024-12-01",
     "endDate": "2024-12-31",
     "operatingHours": "10:00~18:00",
-    "location": "성북구청 앞 광장",
-    "address": "서울특별시 성북구 보문로 168",
+    "location": "우이천 다목적광장",
+    "address": "서울특별시 성북구 석관동 376",
     "price": 0,
     "contactPhone": "02-1234-5678",
     "officialWebsite": "https://seongbuk.go.kr",
@@ -96,6 +99,7 @@ interface EventApi {
     )
     fun getEventDetail(
         @Schema(description = "조회할 행사 ID", example = "1")
-        @PathVariable eventId: Long
+        @PathVariable eventId: Long,
+        @AuthenticationPrincipal jwt: Jwt?
     ): ResponseEntity<RestResponse<EventDetailResponse>>
 }

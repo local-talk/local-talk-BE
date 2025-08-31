@@ -1,42 +1,41 @@
 package com.localtalk.api.event.application
 
+import com.localtalk.api.bookmark.domain.BookmarkService
 import com.localtalk.api.event.application.dto.EventDetailInfo
 import com.localtalk.api.event.application.mapper.EventApplicationMapper
-import com.localtalk.api.event.domain.Event
 import com.localtalk.api.event.domain.EventService
+import com.localtalk.api.review.domain.ReviewService
+import com.localtalk.api.visit.domain.VisitService
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
 class EventApplicationService(
     private val eventService: EventService,
+    private val reviewService: ReviewService,
+    private val bookmarkService: BookmarkService,
+    private val visitService: VisitService,
     private val eventApplicationMapper: EventApplicationMapper,
 ) {
 
     @Transactional(readOnly = true)
     fun getEventDetail(eventId: Long, memberId: Long?): EventDetailInfo {
-        val event = findEventOrThrow(eventId)
-        val totalCount = eventService.getTotalReviewCount(eventId)
-        val averageRating = calculateAverageRating(totalCount, eventId)
+        val event = eventService.getEventByIdOrThrow(eventId)
+        val imageUrl = "https://example/default.jpg"
+        val isLoggedIn = memberId != null
+        val isBookmarked = memberId?.let { bookmarkService.isMemberBookmarked(eventId, it) } ?: false
+        val isVisited = memberId?.let { visitService.isMemberVisited(eventId, it) } ?: false
+        val totalCount = reviewService.getTotalReviewCount(eventId)
+        val averageRating = reviewService.getAverageRating(eventId)
 
         return eventApplicationMapper.toEventDetailInfo(
             event = event,
-            imageUrl = getImageUrl(event),
-            isLoggedIn = memberId != null,
-            isBookmarked = memberId?.let { eventService.isMemberBookmarked(eventId, it) } ?: false,
-            isVisited = memberId?.let { eventService.isMemberVisited(eventId, it) } ?: false,
+            imageUrl = imageUrl,
+            isLoggedIn = isLoggedIn,
+            isBookmarked = isBookmarked,
+            isVisited = isVisited,
             totalReviewCount = totalCount.toInt(),
             averageRating = averageRating
         )
-    }
-
-    private fun findEventOrThrow(eventId: Long): Event =
-        eventService.findByIdActive(eventId) ?: throw IllegalArgumentException("존재하지 않는 행사입니다")
-
-    private fun calculateAverageRating(totalCount: Long, eventId: Long): Double =
-        if (totalCount > 0) eventService.getAverageRating(eventId) else 0.0
-
-    private fun getImageUrl(event: Event): String {
-        return "https://example/default.jpg" // TODO: S3 설정 후 구현
     }
 }
