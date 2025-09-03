@@ -1,11 +1,13 @@
 plugins {
     alias(libs.plugins.kotlin.jpa)
+    alias(libs.plugins.java.test.fixtures)
 }
 
 dependencies {
     implementation(project(":modules:jpa"))
     implementation(project(":modules:web"))
     implementation(project(":modules:webclient"))
+    implementation(project(":modules:s3"))
     implementation(project(":supports:logging"))
 
     implementation("org.springframework.boot:spring-boot-starter-actuator")
@@ -31,4 +33,8 @@ dependencies {
     testImplementation("com.squareup.okhttp3:mockwebserver:4.12.0")
 
     testImplementation(testFixtures(project(":modules:jpa")))
+    testImplementation(testFixtures(project(":modules:s3")))
+    
+    testFixturesImplementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    testFixturesImplementation("org.springframework.boot:spring-boot-starter-test")
 }
