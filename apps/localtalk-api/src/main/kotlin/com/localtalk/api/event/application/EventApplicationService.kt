@@ -21,7 +21,7 @@ class EventApplicationService(
     @Transactional(readOnly = true)
     fun getEventDetail(eventId: Long, memberId: Long?): EventDetailInfo {
         val event = eventService.getEventByIdOrThrow(eventId)
-        val imageUrl = "https://example/default.jpg"
+        val imageUrl = eventService.getImageUrl(event)
         val isLoggedIn = memberId != null
         val isBookmarked = memberId?.let { bookmarkService.isMemberBookmarked(eventId, it) } ?: false
         val isVisited = memberId?.let { visitService.isMemberVisited(eventId, it) } ?: false

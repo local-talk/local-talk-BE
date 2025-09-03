@@ -12,11 +12,6 @@ class ReviewService(
     }
 
     fun getAverageRating(eventId: Long): Double {
-        val totalCount = getTotalReviewCount(eventId)
-        return if (totalCount > 0) {
-            reviewRepository.getAverageRatingByEventId(eventId) ?: 0.0
-        } else {
-            0.0
-        }
+        return reviewRepository.getAverageRatingByEventId(eventId) ?: 0.0
     }
 }
