@@ -6,8 +6,6 @@ import com.localtalk.api.event.entrypoint.dto.EventDetailResponse
 import com.localtalk.api.event.entrypoint.mapper.EventDetailRestMapper
 import com.localtalk.common.model.RestResponse
 import org.springframework.http.ResponseEntity
-import org.springframework.security.core.annotation.AuthenticationPrincipal
-import org.springframework.security.oauth2.jwt.Jwt
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
@@ -22,13 +20,11 @@ class EventController(
 
     @GetMapping("/events/{eventId}")
     override fun getEventDetail(
-        eventId: Long,
-        jwt: Jwt?
+        @PathVariable eventId: Long
     ): ResponseEntity<RestResponse<EventDetailResponse>> {
 
-        val memberId = jwt?.let { token ->
-            (token.claims["id"] as? Number)?.toLong()
-        }
+        // TODO: 나중에 Security Principal로 회원 정보 처리하도록 리팩토링
+        val memberId: Long? = null
 
         return eventApplicationService.getEventDetail(eventId, memberId)
             .let { eventDetailInfo -> eventDetailRestMapper.toEventDetailResponse(eventDetailInfo) }

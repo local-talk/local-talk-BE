@@ -1,6 +1,5 @@
 package com.localtalk.api.event.entrypoint.document
 
-import com.localtalk.api.auth.domain.AuthMember
 import com.localtalk.api.event.entrypoint.dto.EventDetailResponse
 import com.localtalk.common.model.RestResponse
 import io.swagger.v3.oas.annotations.Operation
@@ -11,8 +10,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
-import org.springframework.security.core.annotation.AuthenticationPrincipal
-import org.springframework.security.oauth2.jwt.Jwt
 import org.springframework.web.bind.annotation.PathVariable
 
 @Tag(name = "행사", description = "행사 관련 API")
@@ -20,7 +17,7 @@ interface EventApi {
 
     @Operation(
         summary = "행사 상세 정보 조회",
-        description = "특정 행사의 상세 정보를 조회합니다. 회원인 경우 북마크/방문 상태가 포함되어 반환됩니다."
+        description = "특정 행사의 상세 정보를 조회합니다. 현재는 비회원 대상으로 북마크/방문 상태는 false로 반환됩니다."
     )
     @ApiResponses(
         value = [
@@ -50,7 +47,7 @@ interface EventApi {
     "officialWebsite": "https://seongbuk.go.kr",
     "latitude": 37.5665,
     "longitude": 127.0167,
-    "isLoggedIn": true,
+    "isLoggedIn": false,
     "isBookmarked": false,
     "isVisited": false,
     "averageRating": 4.5,
@@ -99,7 +96,6 @@ interface EventApi {
     )
     fun getEventDetail(
         @Schema(description = "조회할 행사 ID", example = "1")
-        @PathVariable eventId: Long,
-        @AuthenticationPrincipal jwt: Jwt?
+        @PathVariable eventId: Long
     ): ResponseEntity<RestResponse<EventDetailResponse>>
 }
