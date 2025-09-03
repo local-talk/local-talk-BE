@@ -7,5 +7,5 @@ import org.springframework.data.repository.query.Param
 interface EventRepository : JpaRepository<Event, Long> {
 
     @Query("SELECT e FROM Event e WHERE e.id = :eventId AND e.deletedAt IS NULL")
-    fun findByIdActive(@Param("eventId") eventId: Long): Event?
+    fun findByIdAndDeletedAtIsNull(@Param("eventId") eventId: Long): Event?
 }
