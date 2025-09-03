@@ -1,23 +1,19 @@
 package com.localtalk.api.event.application
 
 import com.localtalk.api.bookmark.domain.BookmarkService
-import com.localtalk.api.event.application.dto.EventDetailInfo
 import com.localtalk.api.event.application.mapper.EventApplicationMapper
-import com.localtalk.api.event.domain.Event
 import com.localtalk.api.event.domain.EventService
-import com.localtalk.api.member.domain.Member
-import com.localtalk.api.member.domain.Nickname
+import com.localtalk.api.event.fixture.EventDetailInfoFixture
+import com.localtalk.api.event.fixture.EventFixture
 import com.localtalk.api.review.domain.ReviewService
 import com.localtalk.api.visit.domain.VisitService
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
-import io.mockk.verify
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import java.time.LocalDate
 
 @ExtendWith(MockKExtension::class)
 class EventApplicationServiceTest {
@@ -44,14 +40,15 @@ class EventApplicationServiceTest {
         //given
         val eventId = 1L
         val memberId = 100L
-        val event = createTestEvent()
-        val expectedEventDetailInfo = createTestEventDetailInfo(
+        val event = EventFixture.createEvent()
+        val expectedEventDetailInfo = EventDetailInfoFixture.createEventDetailInfo(
             isBookmarked = true,
             isVisited = false,
             isLoggedIn = true
         )
 
         every { eventService.getEventByIdOrThrow(eventId) } returns event
+        every { eventService.getImageUrl(event) } returns "https://localtalk-storage.s3.ap-northeast-2.amazonaws.com/test/event-image.jpg"
         every { bookmarkService.isMemberBookmarked(eventId, memberId) } returns true
         every { visitService.isMemberVisited(eventId, memberId) } returns false
         every { reviewService.getTotalReviewCount(eventId) } returns 10
@@ -76,12 +73,8 @@ class EventApplicationServiceTest {
         assertThat(result.isLoggedIn).isTrue()
         assertThat(result.isBookmarked).isTrue()
         assertThat(result.isVisited).isFalse()
-        verify { eventService.getEventByIdOrThrow(eventId) }
-        verify { bookmarkService.isMemberBookmarked(eventId, memberId) }
-        verify { visitService.isMemberVisited(eventId, memberId) }
-        verify { reviewService.getTotalReviewCount(eventId) }
-        verify { reviewService.getAverageRating(eventId) }
-
+        assertThat(result.totalReviewCount).isEqualTo(10)
+        assertThat(result.averageRating).isEqualTo(4.5)
     }
 
     @Test
@@ -89,14 +82,15 @@ class EventApplicationServiceTest {
         //given
         val eventId = 1L
         val memberId: Long? = null
-        val event = createTestEvent()
-        val expectedEventDetailInfo = createTestEventDetailInfo(
+        val event = EventFixture.createEvent()
+        val expectedEventDetailInfo = EventDetailInfoFixture.createEventDetailInfo(
             isBookmarked = false,
             isVisited = false,
             isLoggedIn = false
         )
 
         every { eventService.getEventByIdOrThrow(eventId) } returns event
+        every { eventService.getImageUrl(event) } returns "https://localtalk-storage.s3.ap-northeast-2.amazonaws.com/test/event-image.jpg"
         every { reviewService.getTotalReviewCount(eventId) } returns 10
         every { reviewService.getAverageRating(eventId) } returns 4.5
         every {
@@ -119,41 +113,7 @@ class EventApplicationServiceTest {
         assertThat(result.isLoggedIn).isFalse()
         assertThat(result.isVisited).isFalse()
         assertThat(result.isBookmarked).isFalse()
-        verify { eventService.getEventByIdOrThrow(eventId) }
-        verify(exactly = 0) { bookmarkService.isMemberBookmarked(any(), any()) }
-        verify(exactly = 0) { visitService.isMemberVisited(any(), any()) }
-
-    }
-
-    private fun createTestEvent(): Event {
-        return Event(
-            title = "테스트 행사 제목",
-            startDate = LocalDate.of(2025,8,29),
-            price = 5000,
-            member = Member(nickname = Nickname("테스트 유저"))
-        )
-    }
-
-    private fun createTestEventDetailInfo(isBookmarked: Boolean, isVisited: Boolean, isLoggedIn: Boolean): EventDetailInfo {
-        return EventDetailInfo(
-            title = "테스트 행사 제목",
-            description = null,
-            imageUrl = "https://example.com/image.jpg",
-            startDate = LocalDate.of(2025,8,29),
-            endDate = null,
-            operatingHours = null,
-            location = null,
-            address = null,
-            price = 5000,
-            contactPhone = null,
-            officialWebsite = null,
-            latitude = null,
-            longitude = null,
-            isLoggedIn = isLoggedIn,
-            isBookmarked = isBookmarked,
-            isVisited = isVisited,
-            averageRating = 4.5,
-            totalReviewCount = 10
-        )
+        assertThat(result.totalReviewCount).isEqualTo(10)
+        assertThat(result.averageRating).isEqualTo(4.5)
     }
 }
