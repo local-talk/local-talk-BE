@@ -1,9 +1,6 @@
 package com.localtalk.api.event.domain
 
-import com.localtalk.api.bookmark.domain.Bookmark
 import com.localtalk.api.member.domain.Member
-import com.localtalk.api.review.domain.Review
-import com.localtalk.api.visit.domain.Visit
 import com.localtalk.domain.SoftDeleteBaseEntity
 import jakarta.persistence.Column
 import jakarta.persistence.ConstraintMode
@@ -12,7 +9,6 @@ import jakarta.persistence.FetchType
 import jakarta.persistence.ForeignKey
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
-import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
 import java.math.BigDecimal
 import java.time.LocalDate
@@ -25,6 +21,9 @@ class Event (
 
     @Column(columnDefinition = "TEXT")
     val description: String? = null,
+
+    @Column(name = "event_image_key", nullable = false)
+    val eventImageKey: String,
 
     @Column(name = "start_date", nullable = false)
     val startDate: LocalDate,
@@ -60,5 +59,4 @@ class Event (
     @JoinColumn(name = "member_id", foreignKey = ForeignKey(ConstraintMode.NO_CONSTRAINT))
     val member: Member,
 
-) : SoftDeleteBaseEntity() {
-}
+) : SoftDeleteBaseEntity()
