@@ -25,4 +25,8 @@ class SocialLogin(
     var memberId: Long? = null,
 ) : SoftDeleteBaseEntity() {
     fun isSignedUser(): Boolean = memberId != null
+
+    fun connectToMember(memberId: Long) {
+        this.memberId = memberId
+    }
 }

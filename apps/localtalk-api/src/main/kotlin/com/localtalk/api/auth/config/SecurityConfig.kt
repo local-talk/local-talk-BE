@@ -17,12 +17,14 @@ import org.springframework.web.cors.CorsConfigurationSource
 class SecurityConfig(
     val jwtTokenDecoder: JwtTokenDecoder,
     val corsConfigurationSource: CorsConfigurationSource,
+    val localTalkJwtAuthenticationConverter: LocalTalkJwtAuthenticationConverter,
 ) {
 
     @Bean
     fun jwtDecoder(): JwtDecoder = JwtDecoder { token ->
         jwtTokenDecoder.decodeToJwt(token)
     }
+
 
     @Bean
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
@@ -39,6 +41,7 @@ class SecurityConfig(
                     .requestMatchers("/api/v1/interests/**").permitAll()
                     .requestMatchers("/api/v1/members/nickname/validate").authenticated()
                     .requestMatchers("/api/v1/files").authenticated()
+                    .requestMatchers("/api/v1/signup").hasRole(AuthRole.TEMPORARY.name)
                     .requestMatchers(HttpMethod.GET, "/api/v1/events/**").permitAll()
                     .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                     .requestMatchers("/api/v1/**").hasRole(AuthRole.MEMBER.name)
@@ -47,6 +50,7 @@ class SecurityConfig(
             .oauth2ResourceServer { oauth2 ->
                 oauth2.jwt { jwt ->
                     jwt.decoder(jwtDecoder())
+                        .jwtAuthenticationConverter(localTalkJwtAuthenticationConverter)
                 }
             }
             .build()

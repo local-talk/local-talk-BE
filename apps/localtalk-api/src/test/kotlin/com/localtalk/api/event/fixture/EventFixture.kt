@@ -19,7 +19,7 @@ object EventFixture {
         price: Int = 5000,
         contactPhone: String? = "02-1234-5678",
         officialWebsite: String? = "https://test.com",
-        member: Member = MemberFixture.createMember()
+        member: Member = MemberFixture.create()
     ): Event {
         return Event(
             title = title,

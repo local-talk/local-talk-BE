@@ -36,13 +36,17 @@ class File(
 
     @Column(name = "type_id")
     @Comment("파일 타입 ID")
-    val typeId: Long = 0,
+    var typeId: Long = 0,
 
     @Column(name = "expires_at", nullable = true)
     @Comment("파일 만료 일시")
     var expiresAt: LocalDateTime?,
 
     ) : SoftDeleteBaseEntity() {
+    fun markAsUsed(typeId: Long) {
+        this.expiresAt = null
+        this.typeId = typeId
+    }
 
     companion object {
         fun create(
