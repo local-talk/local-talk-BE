@@ -28,4 +28,13 @@ class FileService(
         return fileRepository.save(savedFile)
     }
 
+
+    fun markAsUsed(profileImage: String, typeId: Long) {
+        val file = fileRepository.findByUrl(profileImage)
+            ?: throw IllegalArgumentException("파일을 찾을 수 없습니다: $profileImage")
+
+        file.markAsUsed(typeId)
+        fileRepository.save(file)
+    }
+
 }

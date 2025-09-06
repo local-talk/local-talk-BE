@@ -1,7 +1,9 @@
 package com.localtalk.api.member.entrypoint
 
+import com.localtalk.api.member.domain.Gender
 import com.localtalk.api.member.domain.Member
 import com.localtalk.api.member.domain.MemberRepository
+import com.localtalk.api.member.domain.MemberTerm
 import com.localtalk.api.member.domain.Nickname
 import com.localtalk.api.support.IntegrationTest
 import org.junit.jupiter.api.BeforeEach
@@ -10,6 +12,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
+import java.time.LocalDate
 
 class NicknameValidationControllerTest : IntegrationTest() {
 
@@ -18,7 +21,13 @@ class NicknameValidationControllerTest : IntegrationTest() {
 
     @BeforeEach
     fun setUp() {
-        val existMember = Member(nickname = Nickname("existMember"))
+        val existMember = Member(
+            nickname = Nickname("existMember"),
+            profileImageUrl = "https://example.com/profile.jpg",
+            birthDay = LocalDate.of(1990, 1, 1),
+            gender = Gender.MALE,
+            memberTerm = MemberTerm.forSignup(marketingConsentAgreed = false),
+        )
         memberRepository.save(existMember)
     }
 
@@ -154,7 +163,7 @@ class NicknameValidationControllerTest : IntegrationTest() {
         @Test
         fun `빈 닉네임으로 검증 요청 시 400 에러를 반환한다`() {
             loginAsTemporaryMember()
-            
+
             val response = webTestClient
                 .post()
                 .uri("/api/v1/members/nickname/validate")
@@ -169,7 +178,7 @@ class NicknameValidationControllerTest : IntegrationTest() {
         @Test
         fun `닉네임이 누락된 요청 시 400 에러를 반환한다`() {
             loginAsTemporaryMember()
-            
+
             val response = webTestClient
                 .post()
                 .uri("/api/v1/members/nickname/validate")

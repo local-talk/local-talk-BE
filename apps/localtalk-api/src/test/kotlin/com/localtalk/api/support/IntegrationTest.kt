@@ -1,6 +1,7 @@
 package com.localtalk.api.support
 
 import com.fasterxml.jackson.databind.JsonNode
+import com.localtalk.api.member.fixture.MemberFixture
 import com.localtalk.config.MysqlTestContainerConfig
 import com.localtalk.s3.config.LocalStackS3Config
 import com.localtalk.s3.config.S3TestFixtures
@@ -48,6 +49,30 @@ abstract class IntegrationTest {
     }
 
     protected fun loginAsTemporaryMember() {
+        socialLogin()
+    }
+
+    protected fun loginAsMember() {
+        socialLogin()
+
+        val signupRequest = MemberFixture.createSignupRequest(profileImageUrl = null)
+
+        val memberToken = webTestClient.post()
+            .uri("/api/v1/signup")
+            .contentType(MediaType.APPLICATION_JSON)
+            .bodyValue(signupRequest)
+            .exchange()
+            .expectStatus().isOk
+            .returnResult<JsonNode>()
+            .responseBody
+            .blockFirst()!!["data"]["access_token"].asText()
+
+        webTestClient = webTestClient.mutate()
+            .defaultHeader(HttpHeaders.AUTHORIZATION, "Bearer $memberToken")
+            .build()
+    }
+
+    private fun socialLogin() {
         val validAccessToken = "valid_kakao_access_token"
 
         KakaoApiMockServer.enqueueSuccessResponse()
