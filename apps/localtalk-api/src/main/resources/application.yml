@@ -11,6 +11,11 @@ server:
   max-http-request-header-size: 8KB
 
 spring:
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 10MB
   main:
     web-application-type: servlet
   application:
@@ -22,6 +27,7 @@ spring:
       - file:secrets/secrets.properties
       - jpa.yml
       - webclient.yml
+      - s3.yml
 
 jwt:
   secret: ${JWT_SECRET:defaultSecretKeyForDevelopmentOnlyNotForProduction}

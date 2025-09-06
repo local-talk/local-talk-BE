@@ -13,7 +13,7 @@ services:
       TZ: UTC
 
   localstack:
-    container_name: localstack-main
+    container_name: localtalk-localstack
     image: localstack/localstack:3.8.1
     ports:
       - "4566:4566"
@@ -24,3 +24,4 @@ services:
     volumes:
       - "./localstack:/var/lib/localstack"
       - "/var/run/docker.sock:/var/run/docker.sock"
+      - "./init-s3.sh:/etc/localstack/init/ready.d/init-s3.sh"

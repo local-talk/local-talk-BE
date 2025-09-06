@@ -23,6 +23,10 @@ class MDCLoggingFilter(private val logFormatter: HttpLogFormatter) : OncePerRequ
         response: HttpServletResponse,
         filterChain: FilterChain,
     ) {
+        if (request.contentType?.startsWith("multipart/form-data") == true) {
+            filterChain.doFilter(request, response)
+            return
+        }
         val startTime = System.currentTimeMillis()
 
         val wrappedRequest = CachedBodyRequestWrapper(request)
