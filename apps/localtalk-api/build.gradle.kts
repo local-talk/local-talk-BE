@@ -1,6 +1,5 @@
 plugins {
     alias(libs.plugins.kotlin.jpa)
-    alias(libs.plugins.java.test.fixtures)
 }
 
 dependencies {
@@ -34,7 +33,4 @@ dependencies {
 
     testImplementation(testFixtures(project(":modules:jpa")))
     testImplementation(testFixtures(project(":modules:s3")))
-    
-    testFixturesImplementation("org.springframework.boot:spring-boot-starter-data-jpa")
-    testFixturesImplementation("org.springframework.boot:spring-boot-starter-test")
 }
