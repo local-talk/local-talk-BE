@@ -22,7 +22,6 @@ spring:
       - file:secrets/secrets.properties
       - jpa.yml
       - webclient.yml
-      - s3.yml
 
 jwt:
   secret: ${JWT_SECRET:defaultSecretKeyForDevelopmentOnlyNotForProduction}
