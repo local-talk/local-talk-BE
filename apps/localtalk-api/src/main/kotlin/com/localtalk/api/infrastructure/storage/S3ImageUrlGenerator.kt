@@ -1,4 +1,4 @@
-package com.localtalk.api.infrastructure
+package com.localtalk.api.infrastructure.storage
 
 import com.localtalk.api.common.application.ImageUrlGenerator
 import com.localtalk.s3.config.S3Properties

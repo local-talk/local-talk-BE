@@ -1,8 +1,6 @@
 package com.localtalk.api.event.domain
 
 import com.localtalk.api.event.fixture.EventFixture
-import com.localtalk.api.infrastructure.storage.S3ImageUrlGenerator
-import com.localtalk.s3.config.S3Properties
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
@@ -18,9 +16,6 @@ class EventServiceTest {
 
     @MockK
     private lateinit var eventRepository: EventRepository
-
-    @MockK
-    private lateinit var s3ImageUrlGenerator: S3ImageUrlGenerator
 
     @InjectMockKs
     private lateinit var eventService: EventService

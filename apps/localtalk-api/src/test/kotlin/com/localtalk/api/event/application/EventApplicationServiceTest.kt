@@ -1,6 +1,7 @@
 package com.localtalk.api.event.application
 
 import com.localtalk.api.bookmark.domain.BookmarkService
+import com.localtalk.api.common.application.ImageUrlGenerator
 import com.localtalk.api.event.application.mapper.EventApplicationMapper
 import com.localtalk.api.event.domain.EventService
 import com.localtalk.api.event.fixture.EventDetailInfoFixture
@@ -30,6 +31,9 @@ class EventApplicationServiceTest {
     private lateinit var visitService: VisitService
 
     @MockK
+    private lateinit var imageUrlGenerator: ImageUrlGenerator
+
+    @MockK
     private lateinit var eventApplicationMapper: EventApplicationMapper
 
     @InjectMockKs
@@ -48,7 +52,7 @@ class EventApplicationServiceTest {
         )
 
         every { eventService.getEventByIdOrThrow(eventId) } returns event
-        every { eventService.getImageUrl(event) } returns "https://localtalk-storage.s3.ap-northeast-2.amazonaws.com/test/event-image.jpg"
+        every { imageUrlGenerator.generateImageUrl(event.eventImageKey) } returns "https://localtalk-storage.s3.us-east-1.amazonaws.com/test/event-image.jpg"
         every { bookmarkService.isMemberBookmarked(eventId, memberId) } returns true
         every { visitService.isMemberVisited(eventId, memberId) } returns false
         every { reviewService.getTotalReviewCount(eventId) } returns 10
@@ -90,7 +94,7 @@ class EventApplicationServiceTest {
         )
 
         every { eventService.getEventByIdOrThrow(eventId) } returns event
-        every { eventService.getImageUrl(event) } returns "https://localtalk-storage.s3.ap-northeast-2.amazonaws.com/test/event-image.jpg"
+        every { imageUrlGenerator.generateImageUrl(event.eventImageKey) } returns "https://localtalk-storage.s3.us-east-1.amazonaws.com/test/event-image.jpg"
         every { reviewService.getTotalReviewCount(eventId) } returns 10
         every { reviewService.getAverageRating(eventId) } returns 4.5
         every {
