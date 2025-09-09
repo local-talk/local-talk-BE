@@ -6,6 +6,7 @@ import com.localtalk.s3.config.LocalStackS3Config
 import com.localtalk.s3.config.S3TestFixtures
 import com.localtalk.utils.JpaDatabaseCleaner
 import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
@@ -31,8 +32,17 @@ abstract class IntegrationTest {
     @Autowired
     protected lateinit var clock: MutableClock
 
+    @Autowired
+    protected lateinit var s3TestFixtures: S3TestFixtures
+
+    @BeforeEach
+    fun setUpIntegration() {
+        s3TestFixtures.setupTestBucket()
+    }
+
     @AfterEach
     fun tearDown() {
+        s3TestFixtures.teardownTestBucket()
         databaseCleaner.truncateAllTables()
         clock.now()
     }

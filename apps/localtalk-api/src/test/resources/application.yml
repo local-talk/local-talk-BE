@@ -36,5 +36,5 @@ kakao:
 
 storage:
   s3:
-    default-bucket: test-bucket
+    default-bucket: localtalk-storage
     region: us-east-1

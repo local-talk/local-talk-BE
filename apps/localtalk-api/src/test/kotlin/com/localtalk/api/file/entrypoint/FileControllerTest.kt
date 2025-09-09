@@ -3,13 +3,9 @@ package com.localtalk.api.file.entrypoint
 import com.localtalk.api.file.domain.FileType
 import com.localtalk.api.support.IntegrationTest
 import com.localtalk.api.support.fixture.FileFixture
-import com.localtalk.s3.config.S3TestFixtures
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.io.ByteArrayResource
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -20,38 +16,6 @@ import org.springframework.util.LinkedMultiValueMap
 import org.springframework.web.reactive.function.BodyInserters
 
 class FileControllerTest : IntegrationTest() {
-
-    @Autowired
-    lateinit var s3TestFixtures: S3TestFixtures
-
-    val testBucket = "test-bucket"
-
-    @BeforeEach
-    fun setUp() {
-        s3TestFixtures.setupTestBucket(testBucket)
-    }
-
-    @AfterEach
-    fun s3CleanUp() {
-        s3TestFixtures.teardownTestBucket(testBucket)
-    }
-
-    private fun uploadFile(client: WebTestClient, file: MockMultipartFile, type: String): WebTestClient.ResponseSpec {
-        val bodyBuilder = MultipartBodyBuilder()
-
-        bodyBuilder.part("file", file.resource)
-            .filename(file.originalFilename)
-            .contentType(MediaType.parseMediaType(file.contentType!!))
-
-        bodyBuilder.part("type", type)
-            .contentType(MediaType.TEXT_PLAIN)
-
-        return client.post()
-            .uri("/api/v1/files")
-            .contentType(MediaType.MULTIPART_FORM_DATA)
-            .body(BodyInserters.fromMultipartData(bodyBuilder.build()))
-            .exchange()
-    }
 
     @Nested
     inner class `파일 업로드 성공 케이스를 전달했을 때` {
@@ -229,5 +193,20 @@ class FileControllerTest : IntegrationTest() {
                 .expectStatus().isUnauthorized
         }
     }
+    private fun uploadFile(client: WebTestClient, file: MockMultipartFile, type: String): WebTestClient.ResponseSpec {
+        val bodyBuilder = MultipartBodyBuilder()
 
+        bodyBuilder.part("file", file.resource)
+            .filename(file.originalFilename)
+            .contentType(MediaType.parseMediaType(file.contentType!!))
+
+        bodyBuilder.part("type", type)
+            .contentType(MediaType.TEXT_PLAIN)
+
+        return client.post()
+            .uri("/api/v1/files")
+            .contentType(MediaType.MULTIPART_FORM_DATA)
+            .body(BodyInserters.fromMultipartData(bodyBuilder.build()))
+            .exchange()
+    }
 }
