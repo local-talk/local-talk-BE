@@ -47,7 +47,7 @@ abstract class IntegrationTest {
         clock.now()
     }
 
-    fun loginAsTemporaryMember(): WebTestClient {
+    protected fun loginAsTemporaryMember() {
         val validAccessToken = "valid_kakao_access_token"
 
         KakaoApiMockServer.enqueueSuccessResponse()
@@ -62,7 +62,7 @@ abstract class IntegrationTest {
             .responseBody
             .blockFirst()!!["data"]["access_token"].asText()
 
-        return webTestClient.mutate()
+        webTestClient = webTestClient.mutate()
             .defaultHeader(HttpHeaders.AUTHORIZATION, "Bearer $token")
             .build()
     }
