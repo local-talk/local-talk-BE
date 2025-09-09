@@ -4,6 +4,7 @@ import com.localtalk.api.auth.domain.AuthRole
 import com.localtalk.api.auth.infrastructure.token.JwtTokenDecoder
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.http.HttpMethod
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.http.SessionCreationPolicy
@@ -38,6 +39,7 @@ class SecurityConfig(
                     .requestMatchers("/api/v1/interests/**").permitAll()
                     .requestMatchers("/api/v1/members/nickname/validate").authenticated()
                     .requestMatchers("/api/v1/files").authenticated()
+                    .requestMatchers(HttpMethod.GET, "/api/v1/events/**").permitAll()
                     .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                     .requestMatchers("/api/v1/**").hasRole(AuthRole.MEMBER.name)
                     .anyRequest().authenticated()
