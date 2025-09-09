@@ -51,11 +51,11 @@ class S3TestFixtures(
         }
     }
 
-    fun setupTestBucket(bucketName: String = "test-bucket") {
+    fun setupTestBucket(bucketName: String = "localtalk-storage") {
         createBucket(bucketName)
     }
 
-    fun teardownTestBucket(bucketName: String = "test-bucket") {
+    fun teardownTestBucket(bucketName: String = "localtalk-storage") {
         deleteBucket(bucketName)
     }
 }

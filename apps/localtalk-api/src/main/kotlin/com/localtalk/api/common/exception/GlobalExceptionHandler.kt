@@ -9,10 +9,13 @@ import org.springframework.validation.method.MethodValidationException
 import org.springframework.web.ErrorResponseException
 import org.springframework.web.HttpMediaTypeNotSupportedException
 import org.springframework.web.HttpRequestMethodNotSupportedException
+import org.springframework.web.bind.MissingServletRequestParameterException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
 import org.springframework.web.bind.support.WebExchangeBindException
 import org.springframework.web.method.annotation.HandlerMethodValidationException
+import org.springframework.web.multipart.MaxUploadSizeExceededException
+import org.springframework.web.multipart.support.MissingServletRequestPartException
 import org.springframework.web.server.MethodNotAllowedException
 import org.springframework.web.server.MissingRequestValueException
 import org.springframework.web.server.NotAcceptableStatusException
@@ -48,6 +51,30 @@ class GlobalExceptionHandler {
         return ResponseEntity
             .badRequest()
             .body(RestResponse.error(HttpStatus.BAD_REQUEST, e.message ?: "잘못된 요청입니다."))
+    }
+
+    @ExceptionHandler(MissingServletRequestPartException::class)
+    fun handleMissingServletRequestPartException(e: MissingServletRequestPartException): ResponseEntity<RestResponse<Unit>> {
+        log.debug("Missing request part", e)
+        return ResponseEntity
+            .badRequest()
+            .body(RestResponse.error(HttpStatus.BAD_REQUEST, "필수 요청 파라미터가 누락되었습니다: ${e.requestPartName}"))
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException::class)
+    fun handleMissingServletRequestParameterException(e: MissingServletRequestParameterException): ResponseEntity<RestResponse<Unit>> {
+        log.debug("Missing request parameter", e)
+        return ResponseEntity
+            .badRequest()
+            .body(RestResponse.error(HttpStatus.BAD_REQUEST, "필수 요청 파라미터가 누락되었습니다: ${e.parameterName}"))
+    }
+
+    @ExceptionHandler(MaxUploadSizeExceededException::class)
+    fun handleMaxUploadSizeExceededException(e: MaxUploadSizeExceededException): ResponseEntity<RestResponse<Unit>> {
+        log.debug("Max upload size exceeded", e)
+        return ResponseEntity
+            .status(HttpStatus.PAYLOAD_TOO_LARGE)
+            .body(RestResponse.error(HttpStatus.PAYLOAD_TOO_LARGE, "업로드 가능한 파일 크기를 초과했습니다."))
     }
 
     @ExceptionHandler(NoResourceFoundException::class)

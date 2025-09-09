@@ -38,6 +38,7 @@ class SecurityConfig(
                     .requestMatchers("/api/v1/auth/refresh").permitAll()
                     .requestMatchers("/api/v1/interests/**").permitAll()
                     .requestMatchers("/api/v1/members/nickname/validate").authenticated()
+                    .requestMatchers("/api/v1/files").authenticated()
                     .requestMatchers(HttpMethod.GET, "/api/v1/events/**").permitAll()
                     .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                     .requestMatchers("/api/v1/**").hasRole(AuthRole.MEMBER.name)
