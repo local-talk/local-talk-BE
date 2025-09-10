@@ -28,9 +28,9 @@ class NicknameValidationControllerTest : IntegrationTest() {
         @Test
         fun `유효한 닉네임으로 검증 요청 시 성공 응답을 반환한다`() {
             val validNickname = "홍길동"
-            val client = loginAsTemporaryMember()
+            loginAsTemporaryMember()
 
-            val response = client
+            val response = webTestClient
                 .post()
                 .uri("/api/v1/members/nickname/validate")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -51,9 +51,9 @@ class NicknameValidationControllerTest : IntegrationTest() {
         @Test
         fun `길이가 부족한 닉네임으로 검증 요청 시 400 에러를 반환한다`() {
             val invalidNickname = "a" // 1자 길이 위반
-            val client = loginAsTemporaryMember()
+            loginAsTemporaryMember()
 
-            val response = client
+            val response = webTestClient
                 .post()
                 .uri("/api/v1/members/nickname/validate")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -70,9 +70,9 @@ class NicknameValidationControllerTest : IntegrationTest() {
         @Test
         fun `허용되지 않은 특수문자가 포함된 닉네임으로 검증 요청 시 400 에러를 반환한다`() {
             val invalidNickname = "홍길동@"
-            val client = loginAsTemporaryMember()
+            loginAsTemporaryMember()
 
-            val response = client
+            val response = webTestClient
                 .post()
                 .uri("/api/v1/members/nickname/validate")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -89,9 +89,9 @@ class NicknameValidationControllerTest : IntegrationTest() {
         @Test
         fun `앞뒤 공백이 있는 닉네임으로 검증 요청 시 400 에러를 반환한다`() {
             val invalidNickname = " hello"
-            val client = loginAsTemporaryMember()
+            loginAsTemporaryMember()
 
-            val response = client
+            val response = webTestClient
                 .post()
                 .uri("/api/v1/members/nickname/validate")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -108,9 +108,9 @@ class NicknameValidationControllerTest : IntegrationTest() {
         @Test
         fun `연속된 특수문자가 있는 닉네임으로 검증 요청 시 400 에러를 반환한다`() {
             val invalidNickname = "hello  world"
-            val client = loginAsTemporaryMember()
+            loginAsTemporaryMember()
 
-            val response = client
+            val response = webTestClient
                 .post()
                 .uri("/api/v1/members/nickname/validate")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -131,9 +131,9 @@ class NicknameValidationControllerTest : IntegrationTest() {
         @Test
         fun `중복된 닉네임으로 검증 요청 시 400 에러를 반환한다`() {
             val duplicateNickname = "existMember" // setUp에서 생성된 기존 회원 닉네임
-            val client = loginAsTemporaryMember()
+            loginAsTemporaryMember()
 
-            val response = client
+            val response = webTestClient
                 .post()
                 .uri("/api/v1/members/nickname/validate")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -153,9 +153,9 @@ class NicknameValidationControllerTest : IntegrationTest() {
 
         @Test
         fun `빈 닉네임으로 검증 요청 시 400 에러를 반환한다`() {
-            val client = loginAsTemporaryMember()
+            loginAsTemporaryMember()
             
-            val response = client
+            val response = webTestClient
                 .post()
                 .uri("/api/v1/members/nickname/validate")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -168,9 +168,9 @@ class NicknameValidationControllerTest : IntegrationTest() {
 
         @Test
         fun `닉네임이 누락된 요청 시 400 에러를 반환한다`() {
-            val client = loginAsTemporaryMember()
+            loginAsTemporaryMember()
             
-            val response = client
+            val response = webTestClient
                 .post()
                 .uri("/api/v1/members/nickname/validate")
                 .contentType(MediaType.APPLICATION_JSON)

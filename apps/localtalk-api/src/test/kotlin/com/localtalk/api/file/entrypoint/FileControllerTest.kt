@@ -9,9 +9,6 @@ import org.junit.jupiter.api.Test
 import org.springframework.core.io.ByteArrayResource
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
-import org.springframework.http.client.MultipartBodyBuilder
-import org.springframework.mock.web.MockMultipartFile
-import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.util.LinkedMultiValueMap
 import org.springframework.web.reactive.function.BodyInserters
 
@@ -22,10 +19,16 @@ class FileControllerTest : IntegrationTest() {
 
         @Test
         fun `JPEG 이미지 파일이면 파일 URL을 반환한다`() {
-            val authenticatedClient = loginAsTemporaryMember()
-            val testFile = FileFixture.createMockFile("test.jpg", "image/jpeg")
+            loginAsTemporaryMember()
 
-            val response = uploadFile(authenticatedClient, testFile, FileType.PROFILE.name)
+            val testFile = FileFixture.createMockFile("test.jpg", "image/jpeg")
+            val multipartData = FileFixture.createMultipartData(testFile, FileType.PROFILE.name)
+
+            val response = webTestClient.post()
+                .uri("/api/v1/files")
+                .contentType(MediaType.MULTIPART_FORM_DATA)
+                .body(BodyInserters.fromMultipartData(multipartData))
+                .exchange()
 
             response
                 .expectStatus().isOk
@@ -41,10 +44,15 @@ class FileControllerTest : IntegrationTest() {
 
         @Test
         fun `PNG 이미지 파일이면 파일 URL을 반환한다`() {
-            val authenticatedClient = loginAsTemporaryMember()
+            loginAsTemporaryMember()
             val testFile = FileFixture.createMockFile("test.png", "image/png")
+            val multipartData = FileFixture.createMultipartData(testFile, "PROFILE")
 
-            val response = uploadFile(authenticatedClient, testFile, "PROFILE")
+            val response = webTestClient.post()
+                .uri("/api/v1/files")
+                .contentType(MediaType.MULTIPART_FORM_DATA)
+                .body(BodyInserters.fromMultipartData(multipartData))
+                .exchange()
 
             response
                 .expectStatus().isOk
@@ -57,7 +65,6 @@ class FileControllerTest : IntegrationTest() {
                     assertThat(it).contains("profiles/")
                 }
         }
-
     }
 
     @Nested
@@ -66,10 +73,16 @@ class FileControllerTest : IntegrationTest() {
         @Test
         fun `지원하지 않는 FileType이면 400 에러를 반환한다`() {
             val invalidType = "INVALID_TYPE"
-            val authenticatedClient = loginAsTemporaryMember()
+            loginAsTemporaryMember()
             val testFile = FileFixture.createMockFile("test.jpg", "image/jpeg")
 
-            val response = uploadFile(authenticatedClient, testFile, invalidType)
+            val multipartData = FileFixture.createMultipartData(testFile, invalidType)
+
+            val response = webTestClient.post()
+                .uri("/api/v1/files")
+                .contentType(MediaType.MULTIPART_FORM_DATA)
+                .body(BodyInserters.fromMultipartData(multipartData))
+                .exchange()
 
             response
                 .expectStatus().isBadRequest
@@ -80,10 +93,16 @@ class FileControllerTest : IntegrationTest() {
 
         @Test
         fun `지원하지 않는 MIME 타입이면 400 에러를 반환한다`() {
-            val authenticatedClient = loginAsTemporaryMember()
+            loginAsTemporaryMember()
             val testFile = FileFixture.createMockFile("test.pdf", "application/pdf")
 
-            val response = uploadFile(authenticatedClient, testFile, "PROFILE")
+            val multipartData = FileFixture.createMultipartData(testFile, "PROFILE")
+
+            val response = webTestClient.post()
+                .uri("/api/v1/files")
+                .contentType(MediaType.MULTIPART_FORM_DATA)
+                .body(BodyInserters.fromMultipartData(multipartData))
+                .exchange()
 
             response
                 .expectStatus().isBadRequest
@@ -94,10 +113,16 @@ class FileControllerTest : IntegrationTest() {
 
         @Test
         fun `텍스트 파일이면 400 에러를 반환한다`() {
-            val authenticatedClient = loginAsTemporaryMember()
+            loginAsTemporaryMember()
             val testFile = FileFixture.createMockFile("test.txt", "text/plain")
 
-            val response = uploadFile(authenticatedClient, testFile, "PROFILE")
+            val multipartData = FileFixture.createMultipartData(testFile, "PROFILE")
+
+            val response = webTestClient.post()
+                .uri("/api/v1/files")
+                .contentType(MediaType.MULTIPART_FORM_DATA)
+                .body(BodyInserters.fromMultipartData(multipartData))
+                .exchange()
 
             response
                 .expectStatus().isBadRequest
@@ -112,10 +137,16 @@ class FileControllerTest : IntegrationTest() {
 
         @Test
         fun `빈 파일이면 400 에러를 반환한다`() {
-            val authenticatedClient = loginAsTemporaryMember()
+            loginAsTemporaryMember()
             val emptyFile = FileFixture.createMockFile("empty-file.jpg", "image/jpeg", size = 0)
 
-            val response = uploadFile(authenticatedClient, emptyFile, "PROFILE")
+            val multipartData = FileFixture.createMultipartData(emptyFile, "PROFILE")
+
+            val response = webTestClient.post()
+                .uri("/api/v1/files")
+                .contentType(MediaType.MULTIPART_FORM_DATA)
+                .body(BodyInserters.fromMultipartData(multipartData))
+                .exchange()
 
             response
                 .expectStatus().isBadRequest
@@ -126,10 +157,16 @@ class FileControllerTest : IntegrationTest() {
 
         @Test
         fun `대용량 파일이면 413 에러를 반환한다`() {
-            val authenticatedClient = loginAsTemporaryMember()
+            loginAsTemporaryMember()
             val largeTestFile = FileFixture.createMockFile("large-test-file.jpg", "image/jpeg", size = 11L * 1024 * 1024)
 
-            val response = uploadFile(authenticatedClient, largeTestFile, "PROFILE")
+            val multipartData = FileFixture.createMultipartData(largeTestFile, "PROFILE")
+
+            val response = webTestClient.post()
+                .uri("/api/v1/files")
+                .contentType(MediaType.MULTIPART_FORM_DATA)
+                .body(BodyInserters.fromMultipartData(multipartData))
+                .exchange()
 
             response
                 .expectStatus().is4xxClientError
@@ -144,12 +181,12 @@ class FileControllerTest : IntegrationTest() {
 
         @Test
         fun `파일이 없으면 400 에러를 반환한다`() {
-            val authenticatedClient = loginAsTemporaryMember()
+            loginAsTemporaryMember()
 
             val multipartData = LinkedMultiValueMap<String, Any>()
             multipartData.add("type", "PROFILE")
 
-            val response = authenticatedClient
+            val response = webTestClient
                 .post()
                 .uri("/api/v1/files")
                 .contentType(MediaType.MULTIPART_FORM_DATA)
@@ -162,7 +199,7 @@ class FileControllerTest : IntegrationTest() {
 
         @Test
         fun `파일 타입이 없으면 400 에러를 반환한다`() {
-            val authenticatedClient = loginAsTemporaryMember()
+            loginAsTemporaryMember()
             val testFile = FileFixture.createMockFile("test.jpg", "image/jpeg")
 
             val resource = object : ByteArrayResource(testFile.bytes) {
@@ -172,7 +209,7 @@ class FileControllerTest : IntegrationTest() {
             val multipartData = LinkedMultiValueMap<String, Any>()
             multipartData.add("file", resource)
 
-            val response = authenticatedClient
+            val response = webTestClient
                 .post()
                 .uri("/api/v1/files")
                 .contentType(MediaType.MULTIPART_FORM_DATA)
@@ -187,26 +224,16 @@ class FileControllerTest : IntegrationTest() {
         fun `인증되지 않은 사용자면 401 에러를 반환한다`() {
             val testFile = FileFixture.createMockFile("test.jpg", "image/jpeg")
 
-            val response = uploadFile(webTestClient, testFile, "PROFILE")
+            val multipartData = FileFixture.createMultipartData(testFile, "PROFILE")
+
+            val response = webTestClient.post()
+                .uri("/api/v1/files")
+                .contentType(MediaType.MULTIPART_FORM_DATA)
+                .body(BodyInserters.fromMultipartData(multipartData))
+                .exchange()
 
             response
                 .expectStatus().isUnauthorized
         }
-    }
-    private fun uploadFile(client: WebTestClient, file: MockMultipartFile, type: String): WebTestClient.ResponseSpec {
-        val bodyBuilder = MultipartBodyBuilder()
-
-        bodyBuilder.part("file", file.resource)
-            .filename(file.originalFilename)
-            .contentType(MediaType.parseMediaType(file.contentType!!))
-
-        bodyBuilder.part("type", type)
-            .contentType(MediaType.TEXT_PLAIN)
-
-        return client.post()
-            .uri("/api/v1/files")
-            .contentType(MediaType.MULTIPART_FORM_DATA)
-            .body(BodyInserters.fromMultipartData(bodyBuilder.build()))
-            .exchange()
     }
 }
