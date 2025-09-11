@@ -26,7 +26,7 @@ class EventControllerTest : IntegrationTest() {
 
     @BeforeEach
     fun setUp() {
-        val member = memberRepository.save(MemberFixture.createMember())
+        val member = memberRepository.save(MemberFixture.create())
         event = eventRepository.save(
             EventFixture.createEvent(
                 title = "테스트 행사 제목",

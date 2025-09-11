@@ -19,4 +19,10 @@ abstract class SoftDeleteBaseEntity : BaseEntity() {
     fun restore() {
         deletedAt = null
     }
+
+    val isDeleted: Boolean
+        get() = deletedAt != null
+
+    val exists: Boolean
+        get() = deletedAt == null
 }
