@@ -2,7 +2,6 @@ package com.localtalk.api.auth.infrastructure.token
 
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
-import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.security.oauth2.jwt.Jwt
 import org.springframework.stereotype.Component
 import java.time.Instant
@@ -13,7 +12,6 @@ private const val HEADER_TYPE = "typ"
 private const val HEADER_ALGORITHM = "alg"
 
 @Component
-@EnableConfigurationProperties(JwtProperties::class)
 class JwtTokenDecoder(
     jwtProperties: JwtProperties,
 ) {
