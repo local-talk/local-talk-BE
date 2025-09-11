@@ -3,13 +3,11 @@ package com.localtalk.api.auth.infrastructure.token
 import com.localtalk.api.auth.domain.AuthMember
 import com.localtalk.api.auth.domain.AuthRole
 import com.localtalk.api.auth.domain.contract.TokenProvider
-import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.stereotype.Component
 import java.time.Clock
 import java.time.temporal.ChronoUnit
 
 @Component
-@EnableConfigurationProperties(JwtProperties::class)
 class JwtTokenProvider(
     val jwtProperties: JwtProperties,
     val clock: Clock,
